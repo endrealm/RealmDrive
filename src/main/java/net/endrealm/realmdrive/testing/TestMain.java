@@ -42,7 +42,7 @@ public class TestMain {
                 .close()
             .build();
 
-        DriveService driveService = new DriveServiceFactory().getStatisticsService(
+        DriveService driveService = new DriveServiceFactory().getDriverService(
                 DriveSettings.builder()
                         .type(DriveSettings.BackendType.MONGO_DB)
                         .hostURL("mongodb://localhost:27017")
