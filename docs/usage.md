@@ -100,7 +100,7 @@ service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new S
 When choosing overwrite all entities matching the query will be removed and the data will be added to the database.
 ```java
 Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
-service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3), true, query));
+service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3)), true, query);
 ```
 ##### Deleting
 Delete will delete values matching the query. It will delete the specified amount of entities.
@@ -129,7 +129,7 @@ Iterable<GreatEntity> entities = service.getReader().readAllObjects(query, Great
 #### Writing Queries
 When interacting with the reader and writer you will have to hand over Query objects. Some operations are database **specific** e.g. MongoDB features embedded documents that can be easily be searched for with `setField("child1.name")`, while other databases e.g. MySQL don't. Those issues will have to be resolved manually when switching backend.
 Writing queries is pretty easy. Just create a new Query object and append requirements e.g. addAnd(). Each requirement has to be closed with .close(). Although right now not required, be sure to call .build() at the end later versions might require this.
-**Example Query**
+**Example Query:**
 ```java
 Query query = new Query()
         .addAnd()
