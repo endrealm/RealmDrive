@@ -21,11 +21,11 @@ public class DriveServiceFactory {
      * Get a drive service
      * @return a drive service
      */
-    public DriveService getStatisticsService(DriveSettings settings) {
+    public DriveService getDriveService(DriveSettings settings) {
 
         assert settings.getType() != null;
 
-        DriveBackend backend = getStatisticsBackend(settings.getType());
+        DriveBackend backend = getDriveBackend(settings.getType());
         RealmWriter writer = new SimpleRealmWriter();
         DriveReader reader = new SimpleDriveReader();
 
@@ -45,7 +45,7 @@ public class DriveServiceFactory {
      * @param type type backend should be
      * @return the backend. Defaulted to {@link MongoBackend}
      */
-    private DriveBackend getStatisticsBackend(DriveSettings.BackendType type) {
+    private DriveBackend getDriveBackend(DriveSettings.BackendType type) {
         switch (type) {
             case MONGO_DB: return new MongoBackend();
             //Add further backend types
