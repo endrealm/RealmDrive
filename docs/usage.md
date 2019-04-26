@@ -9,3 +9,8 @@ This project currently has no pre-built versions. The only way to get the depend
 4. Import changes if required
 5. After the dependencies are loaded, open up the maven tab on the right side and click install under lifecycle
 The latest version should than be installed to your local repository. Continue with [Include into project]()
+
+## Include into project
+### Maven
+
+## Getting started
