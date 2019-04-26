@@ -1,0 +1,219 @@
+package net.endrealm.realmdrive.inst;
+
+import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import net.endrealm.realmdrive.interfaces.*;
+import net.endrealm.realmdrive.query.Query;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.BasicBSONList;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+/**
+ * @author johannesjumpertz
+ *
+ * A backend implementation for the MongoDB system
+ */
+public class MongoBackend implements DriveBackend {
+
+    private MongoClient mongoClient;
+    private DriveService driveService;
+    private MongoDatabase database;
+    private MongoCollection collection;
+
+    /**
+     * Creates a connection to the backend
+     *
+     * @param hostURL  host url used when establishing the connection
+     * @param username the username used when establishing the connection
+     * @param password the password used when establishing the connection
+     * @param database database used when connecting. (Some backends might have this in their url)
+     * @param table default table used. Depending on the type a default table might be needed
+     */
+    @Override
+    public void connect(String hostURL, String username, String password, String database, String table) {
+        assert hostURL != null;
+        this.mongoClient = new MongoClient(new MongoClientURI(hostURL));
+        assert database != null;
+        this.database = mongoClient.getDatabase(database);
+        assert table != null;
+        this.collection = this.database.getCollection(table);
+    }
+
+    /**
+     * Sets the service the backend is used by.
+     * @param service service the backend is used by
+     */
+    @Override
+    public void setService(DriveService service) {
+        this.driveService = service;
+    }
+
+    /**
+     * Writes an object to the database.
+     * @param driveObject object to save
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void write(DriveObject driveObject) {
+        collection.insertOne(toMongoDocument(driveObject));
+    }
+
+    /**
+     * Send a query directly to the mongo database
+     *
+     * @return query response
+     */
+    public Iterable sendRawQuery(Bson query) {
+        return collection.find(query);
+    }
+
+    /**
+     * Executes a raw query
+     * @param query backend dependant. For MongoDB see {@link com.mongodb.QueryBuilder}
+     * @return query response
+     */
+    @Override
+    public Iterable rawQuery(Object query) {
+        if(!(query instanceof QueryBuilder))
+            return null;
+        return null;//TODO implement
+    }
+
+    /**
+     * Reads one object matching the query parameters
+     * @param queryDetails the query to use
+     * @return object empty if none found
+     */
+    @Override
+    public DriveObject findOne(Query queryDetails) {
+        Document query = readQuery(queryDetails);
+        FindIterable iterable = collection.find(query);
+        Document result = (Document) iterable.first();
+
+        if(result == null)
+            return null;
+
+        return driveService.getConversionHandler().unStringify(result);
+
+    }
+
+    /**
+     * Read all objects matching the query parameters
+     *
+     * @param queryDetails the query to use
+     * @return empty list if not found
+     */
+    @Override
+    public Iterable<DriveObject> findAll(Query queryDetails) {
+        Document query = readQuery(queryDetails);
+        FindIterable iterable = collection.find(query);
+        ArrayList<DriveObject> result = new ArrayList<>();
+        for(Object item : iterable) {
+            Document document = (Document) item;
+            result.add(driveService.getConversionHandler().unStringify(document));
+        }
+
+        return result;
+    }
+
+    /**
+     * Interprets a query detail instance to a document
+     *
+     * @param query the query
+     * @return query document
+     */
+    @SuppressWarnings("unchecked")
+    private Document readQuery(Query query) {
+
+        BasicDBObject dbObject = BasicDBObject.parse(query.toJson());
+
+        return new Document(dbObject.toMap());
+    }
+
+    /**
+     * Converts a drive object into a mongo db document
+     *
+     * @param statisticsObject the drive object to convert
+     * @return the converted mongo db document
+     */
+    private Document toMongoDocument(DriveObject statisticsObject) {
+        Document dbObject = new Document();
+
+        for(Map.Entry<String, DriveElement> entry : statisticsObject.getSubComponents().entrySet()) {
+            DriveElement element = entry.getValue();
+
+            if(element.getPrimitiveValue() != null) {
+                dbObject.append(entry.getKey(), element.getPrimitiveValue());
+            } else {
+                if(element instanceof DriveObject)
+                    dbObject.append(entry.getKey(), toMongoDocument(element.getAsObject()));
+                else
+                    dbObject.append(entry.getKey(), toMongoList(element.getAsElementArray()));
+            }
+
+        }
+
+        return dbObject;
+    }
+
+    /**
+     * Converts a statistics array into a mongo readable list
+     *
+     * @param array array to be converted
+     * @return mongo list
+     */
+    private BasicBSONList toMongoList(DriveElementArray array) {
+        BasicBSONList basicBSONList = new BasicBSONList();
+
+        for(DriveElement element : array.getContents()) {
+            if(element.getPrimitiveValue() != null) {
+                basicBSONList.add(element.getPrimitiveValue());
+            } else {
+                if(element instanceof DriveObject)
+                    basicBSONList.add(toMongoDocument(element.getAsObject()));
+                else
+                    basicBSONList.add(toMongoList(element.getAsElementArray()));
+            }
+        }
+
+        return basicBSONList;
+    }
+
+
+    /**
+     * Removes one element equal to the query details and adds the element in place
+     *
+     * @param element       element to insert
+     * @param queryDetails used to filter for deletion
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void writeReplace(DriveObject element, Query queryDetails) {
+        collection.replaceOne(readQuery(queryDetails), toMongoDocument(element));
+    }
+
+    /**
+     * Deletes all entries matched by the query
+     *
+     * @param queryDetails the query details used to filter
+     */
+    @Override
+    public void deleteAll(Query queryDetails) {
+        collection.deleteMany(readQuery(queryDetails));
+    }
+
+    /**
+     * Deletes an object from the backend if found
+     *
+     * @param queryDetails the query details used to filter
+     */
+    @Override
+    public void delete(Query queryDetails) {
+        collection.deleteOne(readQuery(queryDetails));
+    }
+}
