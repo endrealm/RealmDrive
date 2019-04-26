@@ -89,7 +89,7 @@ conversion.registerClasses(GreatEntity.class);
 #### Writing
 > Writing in the current version has not been optimized yet.
 
-Now we are going to write objects to our database. We are going to keep using our excample class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward.
+Now we are going to write objects to our database. We are going to keep using our example class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward.
 
 ##### Simple Write
 This will add an entry to the database. It will try to add the entry, this can cause duplicate entries.
@@ -106,6 +106,49 @@ service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new S
 Delete will delete values matching the query. It will delete the specified amount of entities.
 ```java
 Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
-service.getWriter().delete(query, 12)); //Deletes twelve entities where entityname == Josh
+service.getWriter().delete(query, 12); //Deletes twelve entities where entityname == Josh
 ```
 #### Reading
+
+Now we are going to read objects from our database. We are going to keep using our example class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward as well.
+
+##### Read One
+```java
+Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
+DriveObject object = service.getReader().readObject(query); //Reads an object as a DriveObject. This can later be converted into a class object via a DriveObject method
+GreatEntity entity = service.getReader().readObject(query, GreatEntity.class);
+```
+
+##### Read All
+```java
+Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
+Iterable<DriveObject> objects = service.getReader().readAllObjects(query);
+Iterable<GreatEntity> entities = service.getReader().readAllObjects(query, GreatEntity.class);
+```
+
+#### Writing Queries
+When interacting with the reader and writer you will have to hand over Query objects. Some operations are database **specific** e.g. MongoDB features embedded documents that can be easily be searched for with `setField("child1.name")`, while other databases e.g. MySQL don't. Those issues will have to be resolved manually when switching backend.
+Writing queries is pretty easy. Just create a new Query object and append requirements e.g. addAnd(). Each requirement has to be closed with .close(). Although right now not required, be sure to call .build() at the end later versions might require this.
+**Example Query**
+```java
+Query query = new Query()
+        .addAnd()
+            .addEq()
+                .setField("name")
+                .setValue("James")
+            .close()
+            .addIn()
+                .setField("age")
+                .addValue(1)
+                .addValue(2)
+                .addValue(40)
+            .close()
+        .close()
+        .addOr()
+            .addGt()
+                .setField("height")
+                .setValue(10)
+            .close()
+        .close()
+    .build();
+```
