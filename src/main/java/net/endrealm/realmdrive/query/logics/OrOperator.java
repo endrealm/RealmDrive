@@ -3,7 +3,6 @@ package net.endrealm.realmdrive.query.logics;
 import net.endrealm.realmdrive.query.Expression;
 import net.endrealm.realmdrive.query.ExpressionStack;
 import net.endrealm.realmdrive.query.QueryComponent;
-import de.findlunch.stats.query.compare.*;
 import net.endrealm.realmdrive.query.compare.*;
 
 import java.util.ArrayList;
