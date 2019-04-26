@@ -40,16 +40,30 @@ DriveSettings settings = DriveSettings.builder()
                 .table("defaultTable")
                 .build()
 ```
-**The following has not been implemented yet, but will be soon**
+> **The following has not been implemented yet, but will be soon**
 > The table and database defined here are used as a default/fallback if no other is specified in the used querry.
 
 Now there is little left to get a simple DriveService implementation
 ```java
 DriveService service = new DriveServiceFactory().getDriveService(settings);
 ```
+
+#### Marking fields
 Now that you have your service you will probably want to start mapping your first classes. As an example we will map the class `GreatEntity` here.
 ```java
 public class GreatEntity {
+
+  //No-Args constructor is required, when reading values
+  public GreatEntity() {
+    this.feet = 2;
+  }
+  
+  public GreatEntity(String entityName, int age, String[] addresses, int feet) {
+    this.entityName = entityName;
+    this.age = age;
+    this.addresses = addresses;
+    this.feet = feet;
+  }
 
   @SaveVar
   private String entityName;
@@ -60,13 +74,38 @@ public class GreatEntity {
   @SaveVar
   private String[] addresses;
   
-  private int feet = 2;
+  private int feet;
 }
 ```
 **Note** All variables, but `feet` are annotated with @SaveVar. Only those annotated will be saved and retrieved.
-
+#### Register classes
 Now we will want to go ahead and tell the conversion handler that this class can be saved. This is required to automatically transform database entries to classes.
 ```java
 //service is the implementation of DriveService
-service.getConversionHandler().registerClasses(GreatEntity.class);
+ConversionHandler conversion = service.getConversionHandler();
+conversion.registerClasses(GreatEntity.class);
 ```
+
+#### Writing
+> Writing in the current version has not been optimized yet.
+
+Now we are going to write objects to our database. We are going to keep using our excample class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward.
+
+##### Simple Write
+This will add an entry to the database. It will try to add the entry, this can cause duplicate entries.
+```java
+service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3)));
+```
+##### Overwrite
+When choosing overwrite all entities matching the query will be removed and the data will be added to the database.
+```java
+Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
+service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3), true, query));
+```
+##### Deleting
+Delete will delete values matching the query. It will delete the specified amount of entities.
+```java
+Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
+service.getWriter().delete(query, 12)); //Deletes twelve entities where entityname == Josh
+```
+#### Reading
