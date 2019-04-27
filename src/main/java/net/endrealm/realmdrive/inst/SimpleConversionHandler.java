@@ -5,10 +5,7 @@ import net.endrealm.realmdrive.annotations.SaveVar;
 import net.endrealm.realmdrive.exceptions.NotAPrimitiveTypeException;
 import net.endrealm.realmdrive.exceptions.ObjectReadOnlyException;
 import net.endrealm.realmdrive.factory.DriveObjectFactory;
-import net.endrealm.realmdrive.interfaces.DriveElement;
-import net.endrealm.realmdrive.interfaces.DriveElementArray;
-import net.endrealm.realmdrive.interfaces.DriveObject;
-import net.endrealm.realmdrive.interfaces.DriveService;
+import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.utils.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
@@ -22,7 +19,7 @@ import java.util.*;
  * Used to convert drive objects
  */
 @Data
-public class ConversionHandler {
+public class SimpleConversionHandler implements ConversionHandler {
 
     /**
      * A list of classes that can be used to parse objects
@@ -32,7 +29,7 @@ public class ConversionHandler {
     /**
      * Factory used to instantiate new objects
      */
-    private final DriveObjectFactory objectFactory;
+    private DriveObjectFactory objectFactory;
     /**
      * A list of classes considered as primitive
      */
@@ -41,18 +38,18 @@ public class ConversionHandler {
     /**
      * Creates an empty Conversion Handler
      */
-    public ConversionHandler(DriveService driveService) {
+    public SimpleConversionHandler() {
         classes = new ArrayList<>();
-        objectFactory = new DriveObjectFactory(driveService);
         PRIMITIVE_CLASSES = ReflectionUtils.getPrimitiveWrapperTypes();
     }
 
     /**
      * Register classes used for conversion.
-     * @param clazzes the classes to be added. Class should contain at least one field marked with {@link SaveVar}
+     * @param classes the classes to be added. Class should contain at least one field marked with {@link SaveVar}
      */
-    public void registerClasses(Class<?>... clazzes) {
-        classes.addAll(Arrays.asList(clazzes));
+    @Override
+    public void registerClasses(Class<?>... classes) {
+        this.classes.addAll(Arrays.asList(classes));
     }
 
     /**
@@ -64,6 +61,7 @@ public class ConversionHandler {
      * @return returns instance of target type
      * @throws ClassCastException if object can not be transformed.
      */
+    @Override
     public <T> T transform(DriveObject statisticsObject, Class<T> clazz) throws ClassCastException {
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
@@ -123,8 +121,9 @@ public class ConversionHandler {
      * @param array array to transform
      * @param clazz target clazz
      * @return the list
-     * @throws Exception thrown when two lists are in one another
+     * @throws ClassCastException thrown when two lists are in one another
      */
+    @Override
     public List createList(DriveElementArray array, Class clazz) throws ClassCastException {
         List list = new ArrayList<>();
         if(PRIMITIVE_CLASSES.contains(clazz)) {
@@ -148,6 +147,7 @@ public class ConversionHandler {
      * @return transformed object
      * @throws ClassCastException thrown when object can not be transformed
      */
+    @Override
     public DriveObject transform(Object object) throws ClassCastException {
         Class clazz = object.getClass();
         if(!classes.contains(clazz))
@@ -201,6 +201,7 @@ public class ConversionHandler {
      * @param element element to transform
      * @return json string
      */
+    @Deprecated
     public String stringify(DriveElement element) {
         if(element == null)
             return "{}";
@@ -241,6 +242,7 @@ public class ConversionHandler {
      * @param statisticsObject object to be transformed
      * @return null if element does not contain a className or registered class isn't found
      */
+    @Override
     public Object transformAutomatically(DriveObject statisticsObject) {
         DriveElement element = statisticsObject.get("className");
         if(element == null)
@@ -251,5 +253,15 @@ public class ConversionHandler {
                 return transform(statisticsObject, clazz);
 
         return null;
+    }
+
+    /**
+     * Sets the service the reader is used by.
+     *
+     * @param service service the reader is used by
+     */
+    @Override
+    public void setService(DriveService service) {
+        this.objectFactory = new DriveObjectFactory(service);
     }
 }

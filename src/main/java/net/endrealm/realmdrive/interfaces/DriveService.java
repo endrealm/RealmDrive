@@ -1,7 +1,5 @@
 package net.endrealm.realmdrive.interfaces;
 
-import net.endrealm.realmdrive.inst.ConversionHandler;
-
 /**
  * @author johannesjumpertz
  *

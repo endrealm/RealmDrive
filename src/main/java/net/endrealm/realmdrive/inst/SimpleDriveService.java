@@ -1,9 +1,6 @@
 package net.endrealm.realmdrive.inst;
 
-import net.endrealm.realmdrive.interfaces.DriveBackend;
-import net.endrealm.realmdrive.interfaces.DriveReader;
-import net.endrealm.realmdrive.interfaces.DriveService;
-import net.endrealm.realmdrive.interfaces.RealmWriter;
+import net.endrealm.realmdrive.interfaces.*;
 
 
 /**
@@ -40,10 +37,10 @@ public class SimpleDriveService implements DriveService {
      * @param reader the reader to be used
      * @param writer the writer to be used
      */
-    public SimpleDriveService(DriveBackend driveBackend, DriveReader reader, RealmWriter writer) {
+    public SimpleDriveService(DriveBackend driveBackend, DriveReader reader, RealmWriter writer, ConversionHandler conversionHandler) {
         this.reader = reader;
         this.writer = writer;
-        this.conversionHandler = new ConversionHandler(this);
+        this.conversionHandler = conversionHandler;
         this.driveBackend = driveBackend;
     }
 

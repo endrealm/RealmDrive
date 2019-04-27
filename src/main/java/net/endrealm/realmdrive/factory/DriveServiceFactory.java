@@ -1,13 +1,7 @@
 package net.endrealm.realmdrive.factory;
 
-import net.endrealm.realmdrive.inst.MongoBackend;
-import net.endrealm.realmdrive.inst.SimpleDriveReader;
-import net.endrealm.realmdrive.inst.SimpleDriveService;
-import net.endrealm.realmdrive.inst.SimpleRealmWriter;
-import net.endrealm.realmdrive.interfaces.DriveBackend;
-import net.endrealm.realmdrive.interfaces.DriveReader;
-import net.endrealm.realmdrive.interfaces.DriveService;
-import net.endrealm.realmdrive.interfaces.RealmWriter;
+import net.endrealm.realmdrive.inst.*;
+import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.utils.DriveSettings;
 
 /**
@@ -28,14 +22,16 @@ public class DriveServiceFactory {
         DriveBackend backend = getDriveBackend(settings.getType());
         RealmWriter writer = new SimpleRealmWriter();
         DriveReader reader = new SimpleDriveReader();
+        ConversionHandler conversion = new SimpleConversionHandler();
 
-        DriveService driveService = new SimpleDriveService(backend, reader, writer);
+        DriveService driveService = new SimpleDriveService(backend, reader, writer, conversion);
 
         backend.connect(settings.getHostURL(), settings.getUsername(), settings.getPassword(), settings.getDatabase(), settings.getTable());
 
         backend.setService(driveService);
         writer.setService(driveService);
         reader.setService(driveService);
+        conversion.setService(driveService);
 
         return driveService;
     }
