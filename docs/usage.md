@@ -22,7 +22,7 @@ Add the following dependency to your pom.xml
     <scope>compile</scope>
 </dependency>
 ```
-Choose any version you like. To always use the newest version use `LATEST` (Though this might lead to unwanted updates).
+Choose any version you like. To always use the newest version use `LATEST` (Though this might lead to unwanted updates). On top of that you will probably want to depend on the driver of the backend you want to use. To keep the RealmDrive Lightweighted the drivers are not shaded along. Check [here](https://github.com/endrealm/RealmDrive/blob/master/docs/driver-support.md) to find supported drivers.
 
 ## Getting started
 
