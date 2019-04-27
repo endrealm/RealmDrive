@@ -7,3 +7,4 @@ Currently supports:
 ## Contents
 1. [How to contribute](https://github.com/endrealm/RealmDrive/blob/master/CONTRIBUTING.md#contributing)
 2. [Getting started & usage](https://github.com/endrealm/RealmDrive/blob/master/docs/usage.md)
+3. [Supported Drivers](https://github.com/endrealm/RealmDrive/blob/master/docs/driver-support.md)
