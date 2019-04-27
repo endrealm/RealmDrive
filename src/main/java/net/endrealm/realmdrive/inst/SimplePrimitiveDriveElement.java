@@ -1,11 +1,11 @@
 package net.endrealm.realmdrive.inst;
 
+import lombok.Data;
 import net.endrealm.realmdrive.exceptions.NotAPrimitiveTypeException;
 import net.endrealm.realmdrive.interfaces.DriveElement;
 import net.endrealm.realmdrive.interfaces.DriveElementArray;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.utils.ReflectionUtils;
-import lombok.Data;
 
 import java.util.HashMap;
 

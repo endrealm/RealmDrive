@@ -1,7 +1,7 @@
 package net.endrealm.realmdrive.testing.model;
 
-import net.endrealm.realmdrive.annotations.SaveVar;
 import lombok.Data;
+import net.endrealm.realmdrive.annotations.SaveVar;
 
 @Data
 public class Foo {

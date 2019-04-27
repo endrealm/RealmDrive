@@ -1,11 +1,16 @@
 package net.endrealm.realmdrive.inst;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.QueryBuilder;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import net.endrealm.realmdrive.factory.DriveObjectFactory;
 import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.query.Query;
+import net.endrealm.realmdrive.utils.BsonUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.BasicBSONList;
@@ -98,7 +103,7 @@ public class MongoBackend implements DriveBackend {
         if(result == null)
             return null;
 
-        return driveService.getConversionHandler().unStringify(result);
+        return BsonUtils.unStringify(result, new DriveObjectFactory(driveService));
 
     }
 
@@ -115,7 +120,7 @@ public class MongoBackend implements DriveBackend {
         ArrayList<DriveObject> result = new ArrayList<>();
         for(Object item : iterable) {
             Document document = (Document) item;
-            result.add(driveService.getConversionHandler().unStringify(document));
+            result.add(BsonUtils.unStringify(document, new DriveObjectFactory(driveService)));
         }
 
         return result;

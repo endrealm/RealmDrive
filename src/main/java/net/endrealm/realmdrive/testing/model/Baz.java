@@ -1,9 +1,9 @@
 package net.endrealm.realmdrive.testing.model;
 
-import net.endrealm.realmdrive.annotations.SaveVar;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.endrealm.realmdrive.annotations.SaveVar;
 
 import java.util.List;
 
