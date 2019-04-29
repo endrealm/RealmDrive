@@ -40,8 +40,7 @@ DriveSettings settings = DriveSettings.builder()
                 .table("defaultTable")
                 .build()
 ```
-> **The following has not been implemented yet, but will be soon**
-> The table and database defined here are used as a default/fallback if no other is specified in the used querry.
+The table and database defined here are used as a default/fallback, if no other is specified in the used query.
 
 Now there is little left to get a simple DriveService implementation
 ```java
