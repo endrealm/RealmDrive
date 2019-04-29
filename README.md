@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/endrealm/RealmDrive.svg?branch=master)] (https://travis-ci.org/endrealm/RealmDrive)![GitHub contributors](https://img.shields.io/github/contributors/endrealm/realmdrive.svg)
+[![Build Status](https://travis-ci.org/endrealm/RealmDrive.svg?branch=master)](https://travis-ci.org/endrealm/RealmDrive)![GitHub contributors](https://img.shields.io/github/contributors/endrealm/realmdrive.svg)
 # RealmDrive
 Adapter to allow using and switching different backends in Java without a problem. Replaces any usage of Query languages. More information on why to use RealmDrive can be found [here](https://github.com/endrealm/RealmDrive/blob/master/docs/why.md#why-to-use-realmdrive).
 
