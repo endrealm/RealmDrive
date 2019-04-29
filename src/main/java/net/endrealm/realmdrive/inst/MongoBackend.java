@@ -97,6 +97,9 @@ public class MongoBackend implements DriveBackend {
     @Override
     public DriveObject findOne(Query queryDetails) {
         Document query = readQuery(queryDetails);
+
+        MongoCollection collection = readCollectionFromQuery(queryDetails);
+
         FindIterable iterable = collection.find(query);
         Document result = (Document) iterable.first();
 
@@ -105,6 +108,17 @@ public class MongoBackend implements DriveBackend {
 
         return BsonUtils.unStringify(result, new DriveObjectFactory(driveService));
 
+    }
+
+    private MongoCollection readCollectionFromQuery(Query queryDetails) {
+        MongoDatabase database =
+                queryDetails.getDatabaseName() == null ?
+                        this.database :
+                        mongoClient.getDatabase(queryDetails.getDatabaseName());
+
+        return queryDetails.getTableName() == null ?
+                this.collection :
+                database.getCollection(queryDetails.getTableName());
     }
 
     /**

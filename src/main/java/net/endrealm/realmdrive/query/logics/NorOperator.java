@@ -106,6 +106,13 @@ public class NorOperator<T extends QueryComponent> extends LogicOperator<T> impl
         return operator;
     }
 
+    @Override
+    public ValueBetweenOperator<NorOperator<T>> addBet() {
+        ValueBetweenOperator<NorOperator<T>> operator = new ValueBetweenOperator<>(this);
+        expressions.add(operator);
+        return operator;
+    }
+
     /**
      * @return a json representation according to mongo db
      */

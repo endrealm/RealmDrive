@@ -1,9 +1,11 @@
 package net.endrealm.realmdrive.query.compare;
 
+import com.sun.istack.internal.NotNull;
 import net.endrealm.realmdrive.query.QueryComponent;
 import net.endrealm.realmdrive.utils.JsonUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +24,10 @@ public class ValueInOperator<T extends QueryComponent> extends CompareOperator<T
         field = "";
     }
 
-    public ValueInOperator<T> addValue(Object object) {
-        values.add(object);
+    public ValueInOperator<T> addValue(@NotNull Object... objects) {
+        if(objects == null)
+            throw new NullPointerException("Can't add empties to list");
+        values.add(new ArrayList<>(Arrays.asList(objects)));
         return this;
     }
 

@@ -102,6 +102,13 @@ public class NotOperator<T extends QueryComponent> extends LogicOperator<T> impl
         return operator;
     }
 
+    @Override
+    public ValueBetweenOperator<NotOperator<T>> addBet() {
+        ValueBetweenOperator<NotOperator<T>> operator = new ValueBetweenOperator<>(this);
+        expression = operator;
+        return operator;
+    }
+
     /**
      * @return a json representation according to mongo db
      */

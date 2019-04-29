@@ -27,4 +27,5 @@ public interface ExpressionStack {
     LessThanOperator addLt();
     ValueInOperator addIn();
     ValueNotInOperator addNin();
+    ValueBetweenOperator addBet();
 }

@@ -1,5 +1,7 @@
 package net.endrealm.realmdrive.query;
 
+import com.sun.istack.internal.Nullable;
+import lombok.Getter;
 import net.endrealm.realmdrive.query.compare.*;
 import net.endrealm.realmdrive.query.logics.AndOperator;
 import net.endrealm.realmdrive.query.logics.NorOperator;
@@ -15,8 +17,12 @@ import java.util.stream.Collectors;
  *
  * Defines a query base object
  */
-public class Query implements QueryComponent,ExpressionStack {
+public class Query implements QueryComponent, ExpressionStack {
     private ArrayList<QueryComponent> components;
+    @Getter
+    private String tableName;
+    @Getter
+    private String databaseName;
 
     public Query() {
         components = new ArrayList<>();
@@ -117,6 +123,13 @@ public class Query implements QueryComponent,ExpressionStack {
     }
 
     @Override
+    public ValueBetweenOperator<Query> addBet() {
+        ValueBetweenOperator<Query> operator = new ValueBetweenOperator<>(this);
+        components.add(operator);
+        return operator;
+    }
+
+    @Override
     public String toJson() {
         return "{"+
                 components.stream()
@@ -128,5 +141,27 @@ public class Query implements QueryComponent,ExpressionStack {
                         } )
                         .collect(Collectors.joining(","))
                 +"}";
+    }
+
+    /**
+     * If none selected default table will be used
+     *
+     * @param tableName name of the target table
+     * @return this query instance
+     */
+    public Query setTableName(@Nullable String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
+
+    /**
+     * If none selected default database will be used
+     *
+     * @param databaseName name of the target database
+     * @return this query instance
+     */
+    public Query setDatabaseName(@Nullable String databaseName) {
+        this.databaseName = databaseName;
+        return this;
     }
 }

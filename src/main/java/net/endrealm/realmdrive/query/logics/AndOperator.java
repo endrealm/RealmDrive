@@ -106,6 +106,13 @@ public class AndOperator<T extends QueryComponent> extends LogicOperator<T> impl
         return operator;
     }
 
+    @Override
+    public ValueBetweenOperator<AndOperator<T>> addBet() {
+        ValueBetweenOperator<AndOperator<T>> operator = new ValueBetweenOperator<>(this);
+        expressions.add(operator);
+        return operator;
+    }
+
     /**
      * @return a json representation according to mongo db
      */

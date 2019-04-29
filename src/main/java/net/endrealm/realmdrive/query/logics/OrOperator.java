@@ -106,6 +106,13 @@ public class OrOperator<T extends QueryComponent> extends LogicOperator<T> imple
         return operator;
     }
 
+    @Override
+    public ValueBetweenOperator<OrOperator<T>> addBet() {
+        ValueBetweenOperator<OrOperator<T>> operator = new ValueBetweenOperator<>(this);
+        expressions.add(operator);
+        return operator;
+    }
+
     /**
      * @return a json representation according to mongo db
      */
