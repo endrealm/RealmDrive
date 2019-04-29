@@ -29,6 +29,16 @@ public class SimpleRealmWriter implements RealmWriter {
     }
 
     /**
+     * Write an entry to the backend. When already existent two entries will exist.
+     *
+     * @param object element to be inserted, will be transformed automatically
+     */
+    @Override
+    public void write(Object object) {
+        write(driveService.getConversionHandler().transform(object));
+    }
+
+    /**
      * Write an entry to the backend.
      *
      * @param element       element to be inserted
@@ -38,6 +48,18 @@ public class SimpleRealmWriter implements RealmWriter {
     @Override
     public void write(DriveObject element, boolean overwrite, Query queryDetails) {
         driveService.getBackend().writeReplace(element, queryDetails);
+    }
+
+    /**
+     * Write an entry to the backend.
+     *
+     * @param object       element to be inserted, will be transformed automatically
+     * @param overwrite    should existing parameters be overwritten? If not a new value will be inserted.
+     * @param queryDetails used two find duplicates
+     */
+    @Override
+    public void write(Object object, boolean overwrite, Query queryDetails) {
+        write(driveService.getConversionHandler().transform(object), overwrite, queryDetails);
     }
 
     /**
