@@ -1,8 +1,11 @@
 # RealmDrive
-Adapter to allow using and switching different backends in Java without a problem
+Adapter to allow using and switching different backends in Java without a problem. Replaces any usage of Query languages.
 
-Currently supports:
+Currently supported database systems:
  - MongoDB
+ 
+ Soon to be supported:
+ - MySQL
  
 ## Contents
 1. [How to contribute](https://github.com/endrealm/RealmDrive/blob/master/CONTRIBUTING.md#contributing)
