@@ -2,7 +2,7 @@ package net.endrealm.realmdrive.inst;
 
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
-import net.endrealm.realmdrive.interfaces.RealmWriter;
+import net.endrealm.realmdrive.interfaces.DriveWriter;
 import net.endrealm.realmdrive.query.Query;
 
 /**
@@ -11,7 +11,7 @@ import net.endrealm.realmdrive.query.Query;
  * Simple implementation of the drive writer
  * Just does rudimentary stuff. Actually not more than writing the data to the backend.
  */
-public class SimpleRealmWriter implements RealmWriter {
+public class SimpleDriveWriter implements DriveWriter {
 
     /**
      * drive service using this writer

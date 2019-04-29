@@ -18,7 +18,7 @@ public class SimpleDriveService implements DriveService {
     /**
      * The drive writer that should be used to write values
      */
-    private final RealmWriter writer;
+    private final DriveWriter writer;
 
     /**
      * The conversion handler that contains various methods to convert objects
@@ -26,7 +26,7 @@ public class SimpleDriveService implements DriveService {
     private final ConversionHandler conversionHandler;
 
     /**
-     * The drive backend used to save data. Should only be used if both {@link DriveReader} and {@link RealmWriter} can not be used
+     * The drive backend used to save data. Should only be used if both {@link DriveReader} and {@link DriveWriter} can not be used
      */
     private final DriveBackend driveBackend;
 
@@ -37,7 +37,7 @@ public class SimpleDriveService implements DriveService {
      * @param reader the reader to be used
      * @param writer the writer to be used
      */
-    public SimpleDriveService(DriveBackend driveBackend, DriveReader reader, RealmWriter writer, ConversionHandler conversionHandler) {
+    public SimpleDriveService(DriveBackend driveBackend, DriveReader reader, DriveWriter writer, ConversionHandler conversionHandler) {
         this.reader = reader;
         this.writer = writer;
         this.conversionHandler = conversionHandler;
@@ -70,7 +70,7 @@ public class SimpleDriveService implements DriveService {
      * @return the writer
      */
     @Override
-    public RealmWriter getWriter() {
+    public DriveWriter getWriter() {
         return writer;
     }
 

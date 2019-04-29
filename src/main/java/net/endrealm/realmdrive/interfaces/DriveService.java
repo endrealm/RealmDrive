@@ -23,7 +23,7 @@ public interface DriveService {
      * Retrieves the writer used to write new drive into the backend
      * @return the writer
      */
-    RealmWriter getWriter();
+    DriveWriter getWriter();
 
     /**
      * Retrieves the conversion handler used to convert objects

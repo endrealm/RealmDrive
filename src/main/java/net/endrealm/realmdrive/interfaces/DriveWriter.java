@@ -7,7 +7,7 @@ import net.endrealm.realmdrive.query.Query;
  *
  * This defines a drive writer object
  */
-public interface RealmWriter {
+public interface DriveWriter {
 
     /**
      * Write an entry to the backend. When already existent two entries will exist.

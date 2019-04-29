@@ -20,7 +20,7 @@ public class DriveServiceFactory {
         assert settings.getType() != null;
 
         DriveBackend backend = getDriveBackend(settings.getType());
-        RealmWriter writer = new SimpleRealmWriter();
+        DriveWriter writer = new SimpleDriveWriter();
         DriveReader reader = new SimpleDriveReader();
         ConversionHandler conversion = new SimpleConversionHandler();
 

@@ -47,7 +47,7 @@ public class TestMain {
                         .build()
         );
 
-        RealmWriter writer = driveService.getWriter();
+        DriveWriter writer = driveService.getWriter();
         DriveReader reader = driveService.getReader();
         ConversionHandler conversion = driveService.getConversionHandler();
         conversion.registerClasses(Foo.class, Bar.class, Baz.class);
@@ -106,7 +106,7 @@ public class TestMain {
 
     }
 
-    private static void clearAll(RealmWriter writer) {
+    private static void clearAll(DriveWriter writer) {
         Query query1 = new Query()
                 .addOr()
                 .addEq()
