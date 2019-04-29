@@ -1,9 +1,9 @@
 package net.endrealm.realmdrive.query.compare;
 
-import com.sun.istack.internal.NotNull;
 import net.endrealm.realmdrive.query.QueryComponent;
 import net.endrealm.realmdrive.utils.JsonUtils;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;

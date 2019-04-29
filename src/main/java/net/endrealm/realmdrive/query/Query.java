@@ -1,6 +1,5 @@
 package net.endrealm.realmdrive.query;
 
-import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import net.endrealm.realmdrive.query.compare.*;
 import net.endrealm.realmdrive.query.logics.AndOperator;
@@ -149,7 +148,7 @@ public class Query implements QueryComponent, ExpressionStack {
      * @param tableName name of the target table
      * @return this query instance
      */
-    public Query setTableName(@Nullable String tableName) {
+    public Query setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -160,7 +159,7 @@ public class Query implements QueryComponent, ExpressionStack {
      * @param databaseName name of the target database
      * @return this query instance
      */
-    public Query setDatabaseName(@Nullable String databaseName) {
+    public Query setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
         return this;
     }
