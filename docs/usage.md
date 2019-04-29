@@ -86,20 +86,18 @@ conversion.registerClasses(GreatEntity.class);
 ```
 
 #### Writing
-> Writing in the current version has not been optimized yet.
-
 Now we are going to write objects to our database. We are going to keep using our example class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward.
 
 ##### Simple Write
 This will add an entry to the database. It will try to add the entry, this can cause duplicate entries.
 ```java
-service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3)));
+service.getWriter().write(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3));
 ```
 ##### Overwrite
 When choosing overwrite all entities matching the query will be removed and the data will be added to the database.
 ```java
 Query query = new Query().addEq().setField("entityName").setValue("Josh").close().build();
-service.getWriter().write(conversion.transform(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3)), true, query);
+service.getWriter().write(new GreatEntity("Josh", 19, new String[] {"nowhere lol"}, 3), true, query);
 ```
 ##### Deleting
 Delete will delete values matching the query. It will delete the specified amount of entities.
