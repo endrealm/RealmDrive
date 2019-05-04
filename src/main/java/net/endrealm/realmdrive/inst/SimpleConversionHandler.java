@@ -63,6 +63,10 @@ public class SimpleConversionHandler implements ConversionHandler {
      */
     @Override
     public <T> T transform(DriveObject statisticsObject, Class<T> clazz) throws ClassCastException {
+
+        if(statisticsObject == null || statisticsObject.isEmpty())
+            return null;
+
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
 
@@ -149,6 +153,10 @@ public class SimpleConversionHandler implements ConversionHandler {
      */
     @Override
     public DriveObject transform(Object object) throws ClassCastException {
+
+        if(object == null)
+            return null;
+
         Class clazz = object.getClass();
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));

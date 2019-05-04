@@ -94,6 +94,16 @@ public class SimpleDriveObject implements DriveObject {
     }
 
     /**
+     * Checks if this object is empty
+     *
+     * @return true if object does not contain any values
+     */
+    @Override
+    public boolean isEmpty() {
+        return elementHashMap.isEmpty();
+    }
+
+    /**
      * @return this element as a {@link Boolean}
      * @throws ClassCastException         thrown if the element is not that type
      * @throws NotAPrimitiveTypeException thrown if the element is not a primitive type

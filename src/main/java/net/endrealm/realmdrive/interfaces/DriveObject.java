@@ -47,4 +47,11 @@ public interface DriveObject extends DriveElement {
      * @throws ClassCastException thrown if this object can not be converted into the specified object.
      */
     <T> T getAsTypedObject(Class<T> clazz) throws ClassCastException;
+
+    /**
+     * Checks if this object is empty
+     *
+     * @return true if object does not contain any values
+     */
+    boolean isEmpty();
 }
