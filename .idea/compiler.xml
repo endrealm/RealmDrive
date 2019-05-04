@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="realm-drive" />
         <module name="RealmDrive" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="realm-drive" target="1.8" />
       <module name="RealmDrive" target="1.8" />
     </bytecodeTargetLevel>
   </component>
