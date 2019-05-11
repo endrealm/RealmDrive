@@ -4,16 +4,24 @@ import com.mongodb.QueryBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.endrealm.realmdrive.exceptions.EmbeddingNotSupportedException;
+import net.endrealm.realmdrive.exceptions.UndefinedNotSupportedException;
 import net.endrealm.realmdrive.interfaces.DriveBackend;
+import net.endrealm.realmdrive.interfaces.DriveElement;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.query.Query;
+import net.endrealm.realmdrive.utils.MySQLUtils;
+import net.endrealm.realmdrive.utils.ReflectionUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author johannesjumpertz
@@ -51,7 +59,19 @@ public class MySQLBackend implements DriveBackend {
      */
     @Override
     public void write(DriveObject driveObject) {
+        try {
+            MySQLEntity mySQLEntity = new MySQLEntity(driveObject);
+            PreparedStatement statement = connection.prepareStatement(
+                    String.format("INSERT INTO '%s' (%s) VALUES (%s)",
+                            mySQLEntity.getTableName(),
+                            mySQLEntity.getKeysAsSQL(),
+                            mySQLEntity.getValuesAsSQL())
+            );
 
+            statement.execute();
+        } catch (UndefinedNotSupportedException | EmbeddingNotSupportedException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -134,5 +154,33 @@ public class MySQLBackend implements DriveBackend {
     private class MySQLEntity {
         private String tableName;
         private HashMap<String, Object> values = new HashMap<>();
+
+        public MySQLEntity(DriveObject driveObject) throws UndefinedNotSupportedException, EmbeddingNotSupportedException {
+            try {
+                String[] parts = driveObject.get("class").getAsString().split("\\.");
+                tableName = MySQLUtils.getConventionName(parts[parts.length-1]);
+            } catch (Exception ex) {
+                throw new UndefinedNotSupportedException();
+            }
+            for(Map.Entry<String, DriveElement> entry : driveObject.getSubComponents().entrySet()) {
+                if(entry.getValue().getPrimitiveValue() == null)
+                    throw new EmbeddingNotSupportedException();
+                values.put(entry.getKey(), entry.getValue().getPrimitiveValue());
+            }
+        }
+
+        public String getKeysAsSQL() {
+            return String.join(",", values.keySet());
+        }
+
+        public String getValuesAsSQL() {
+            return String.join(",",
+                    values.values().stream().map((e) -> {
+                        if(e instanceof Number)
+                            return e.toString();
+                        return "'"+e.toString()+"'";
+                    }).collect(Collectors.toList())
+            );
+        }
     }
 }

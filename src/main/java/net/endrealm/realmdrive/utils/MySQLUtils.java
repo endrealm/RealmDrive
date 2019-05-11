@@ -30,7 +30,7 @@ public class MySQLUtils {
      * @param name name to convert
      * @return name matching conventions
      */
-    private static String getConventionName(String name) {
+    public static String getConventionName(String name) {
         ArrayList<String> parts = new ArrayList<>();
 
         StringBuilder builder = new StringBuilder();
