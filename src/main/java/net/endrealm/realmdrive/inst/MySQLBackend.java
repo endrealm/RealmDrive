@@ -1,14 +1,30 @@
 package net.endrealm.realmdrive.inst;
 
 import com.mongodb.QueryBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.endrealm.realmdrive.interfaces.DriveBackend;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.query.Query;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author johannesjumpertz
+ *
+ * Simple driver implementation to allow using MYSQL
+ *
+ */
 public class MySQLBackend implements DriveBackend {
+
+    private Connection connection;
+
     /**
      * Creates a connection to the backend
      *
@@ -16,11 +32,16 @@ public class MySQLBackend implements DriveBackend {
      * @param username the username used when establishing the connection
      * @param password the password used when establishing the connection
      * @param database database used when connecting. (Some backends might have this in their url)
-     * @param table    default table used. Depending on the type a default table might be needed
+     * @param table    unused
      */
     @Override
     public void connect(String hostURL, String username, String password, String database, String table) {
-
+        try {
+            this.connection = DriverManager.getConnection(hostURL + "/" + database+"?autoReconnect=true", username,
+                    password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -105,5 +126,13 @@ public class MySQLBackend implements DriveBackend {
     @Override
     public Iterable rawQuery(Object query) {
         return null;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private class MySQLEntity {
+        private String tableName;
+        private HashMap<String, Object> values = new HashMap<>();
     }
 }
