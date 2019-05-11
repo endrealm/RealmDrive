@@ -44,6 +44,7 @@ public class DriveServiceFactory {
     private DriveBackend getDriveBackend(DriveSettings.BackendType type) {
         switch (type) {
             case MONGO_DB: return new MongoBackend();
+            case MYSQL: return new MySQLBackend();
             //Add further backend types
             default: return new MongoBackend();
         }

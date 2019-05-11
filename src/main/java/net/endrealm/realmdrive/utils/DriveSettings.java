@@ -48,6 +48,7 @@ public class DriveSettings {
      * A small enum for constant types
      */
     public enum BackendType {
-        MONGO_DB
+        MONGO_DB,
+        MYSQL
     }
 }
