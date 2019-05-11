@@ -78,5 +78,14 @@ public interface DriveBackend {
      * @param query backend dependant. For MongoDB see {@link com.mongodb.QueryBuilder}
      * @return query response
      */
+    @Deprecated
     Iterable rawQuery(Object query);
+
+    /**
+     * Prepares to use a specific entity. This is required for some databases (e.g. MySQL) to work.
+     * It will automatically try to generate and modify tables to fit the entities.
+     *
+     * @param clazz the class of the entity to save
+     */
+    void prepareEntity(Class<?> clazz);
 }
