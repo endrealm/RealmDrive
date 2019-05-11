@@ -16,6 +16,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.BasicBSONList;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -128,7 +129,7 @@ public class MongoBackend implements DriveBackend {
      * @return empty list if not found
      */
     @Override
-    public Iterable<DriveObject> findAll(Query queryDetails) {
+    public List<DriveObject> findAll(Query queryDetails) {
         Document query = readQuery(queryDetails);
         FindIterable iterable = collection.find(query);
         ArrayList<DriveObject> result = new ArrayList<>();

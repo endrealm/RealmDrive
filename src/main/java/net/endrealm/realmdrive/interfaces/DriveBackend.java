@@ -2,6 +2,8 @@ package net.endrealm.realmdrive.interfaces;
 
 import net.endrealm.realmdrive.query.Query;
 
+import java.util.List;
+
 /**
  * @author johannesjumpertz
  *
@@ -41,7 +43,7 @@ public interface DriveBackend {
      * @param queryDetails the query to use
      * @return empty list if not found
      */
-    Iterable<DriveObject> findAll(Query queryDetails);
+    List<DriveObject> findAll(Query queryDetails);
 
     /**
      * Sets the service the backend is used by.

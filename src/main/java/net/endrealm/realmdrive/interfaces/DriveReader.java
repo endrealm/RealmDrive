@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.interfaces;
 
 import net.endrealm.realmdrive.query.Query;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -71,7 +72,7 @@ public interface DriveReader {
      * @param query query details used to search for the objects
      * @return objects that were found
      */
-    Iterable<DriveObject> readAllObjects(Query query);
+    List<DriveObject> readAllObjects(Query query);
 
 
     /**
@@ -80,7 +81,7 @@ public interface DriveReader {
      * @param query query details used to search for the objects
      * @param onResult invoked upon result
      */
-    void readAllObjectsAsync(Query query, Consumer<Iterable<DriveObject>> onResult);
+    void readAllObjectsAsync(Query query, Consumer<List<DriveObject>> onResult);
 
     /**
      * Read all object instances found by the specified parameters
@@ -90,7 +91,7 @@ public interface DriveReader {
      * @return objects that were found
      * @throws ClassCastException thrown if found objects can not be converted into T
      */
-    <T> Iterable<T> readAllObjects(Query query, Class<T> clazz) throws ClassCastException;
+    <T> List<T> readAllObjects(Query query, Class<T> clazz) throws ClassCastException;
 
 
     /**
@@ -101,7 +102,7 @@ public interface DriveReader {
      * @param onSuccess invoked upon result
      * @param onError called when an error occurs
      */
-    <T> void readAllObjects(Query query, Class<T> clazz, Consumer<Iterable<T>> onSuccess, Consumer<Throwable> onError);
+    <T> void readAllObjects(Query query, Class<T> clazz, Consumer<List<T>> onSuccess, Consumer<Throwable> onError);
 
     /**
      * Sets the service the reader is used by.

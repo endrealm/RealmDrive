@@ -1,6 +1,5 @@
 package net.endrealm.realmdrive.inst;
 
-import net.endrealm.realmdrive.interfaces.DriveElement;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveReader;
 import net.endrealm.realmdrive.interfaces.DriveService;
@@ -129,7 +128,7 @@ public class SimpleDriveReader implements DriveReader {
      * @return objects that were found
      */
     @Override
-    public Iterable<DriveObject> readAllObjects(Query query) {
+    public List<DriveObject> readAllObjects(Query query) {
         return driveService.getBackend().findAll(query);
     }
 
@@ -140,10 +139,10 @@ public class SimpleDriveReader implements DriveReader {
      * @param onResult invoked upon result
      */
     @Override
-    public void readAllObjectsAsync(Query query, Consumer<Iterable<DriveObject>> onResult) {
+    public void readAllObjectsAsync(Query query, Consumer<List<DriveObject>> onResult) {
         ThreadUtils.createNewThread(
                 () -> {
-                    Iterable<DriveObject> result = readAllObjects(query);
+                    List<DriveObject> result = readAllObjects(query);
                     onResult.accept(result);
                 }
         );
@@ -158,7 +157,7 @@ public class SimpleDriveReader implements DriveReader {
      * @throws ClassCastException thrown if found objects can not be converted into T
      */
     @Override
-    public <T> Iterable<T> readAllObjects(Query query, Class<T> clazz) throws ClassCastException {
+    public <T> List<T> readAllObjects(Query query, Class<T> clazz) throws ClassCastException {
         List<T> list = new ArrayList<>();
         for (DriveObject obj: readAllObjects(query)) {
             list.add(driveService.getConversionHandler().transform(obj, clazz))
@@ -175,11 +174,11 @@ public class SimpleDriveReader implements DriveReader {
      * @param onError   called when an error occurs
      */
     @Override
-    public <T> void readAllObjects(Query query, Class<T> clazz, Consumer<Iterable<T>> onSuccess, Consumer<Throwable> onError) {
+    public <T> void readAllObjects(Query query, Class<T> clazz, Consumer<List<T>> onSuccess, Consumer<Throwable> onError) {
         ThreadUtils.createNewThread(
                 () -> {
                     try {
-                        Iterable<T> result = readAllObjects(query, clazz);
+                        List<T> result = readAllObjects(query, clazz);
                         onSuccess.accept(result);
 
                     } catch (Exception ex) {
