@@ -4,7 +4,29 @@
 
     <artifactId>realm-drive</artifactId>
     <groupId>net.endrealm</groupId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Realm Drive</name>
+    <description>
+        A database adapter allowing to switch different databases without requiring users to change their code.
+        Focuses on simple usage.
+    </description>
+    <url>https://github.com/endrealm/RealmDrive</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL)</name>
+            <url>http://www.gnu.org/licenses/gpl.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Johannes</name>
+            <email>gerolmed@endrealm.net</email>
+            <organization>Endrealm</organization>
+            <organizationUrl>http://www.endrealm.net</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>

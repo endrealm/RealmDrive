@@ -45,6 +45,7 @@ public interface DriveElementArray extends DriveElement {
     /**
      * Returns this object converted to an object of the specified type
      * @param <T> type to convert object to
+     * @param clazz type to convert object to
      * @return converted object
      * @throws ClassCastException thrown if this object can not be converted into the specified object.
      */

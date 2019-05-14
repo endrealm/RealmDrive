@@ -73,6 +73,7 @@ public class MongoBackend implements DriveBackend {
     /**
      * Send a query directly to the mongo database
      *
+     * @param query the raw query used to send the message
      * @return query response
      */
     public Iterable sendRawQuery(Bson query) {

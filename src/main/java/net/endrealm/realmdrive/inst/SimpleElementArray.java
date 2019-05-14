@@ -86,7 +86,8 @@ public class SimpleElementArray implements DriveElementArray {
     /**
      * Returns this object converted to an object of the specified type
      *
-     * @param clazz@return converted object
+     * @param clazz type to convert object to
+     * @return converted object
      * @throws ClassCastException thrown if this object can not be converted into the specified object.
      */
     @Override
