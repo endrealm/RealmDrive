@@ -1,6 +1,6 @@
 # Usage
 ## Build
-It is recommended to use the Releases on Maven Central (here)[https://search.maven.org/artifact/net.endrealm/realm-drive/]
+It is recommended to use the Releases on Maven Central [here](https://search.maven.org/artifact/net.endrealm/realm-drive/)
 ### Build with Maven (optional)
 **Used IDE:** *Intellij IDEA*
 Only use this method if there is some issue to grab it from the maven central repository or if you want to use development builds.
