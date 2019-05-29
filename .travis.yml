@@ -1,2 +1,22 @@
 language: java
 script: mvn clean verify
+language: java
+script: mvn clean verify
+before_deploy:
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
+cache:
+  directories:
+  - $HOME/.m2
+deploy:
+   provider: releases
+       api_key:
+           secure: sdafkjadfjklsdfjklsdfjklasdfjl
+       file:
+           - apiee-RealmDrive/target/realm-drive-$project_version.jar
+           - apiee-RealmDrive/target/realm-drive-$project_version-javadoc.jar
+           - apiee-RealmDrive/target/realm-drive-$project_version-sources.jar
+       skip_cleanup: true
+       on:
+           repo: phillip-kruger/apiee
+       name: $project_version
