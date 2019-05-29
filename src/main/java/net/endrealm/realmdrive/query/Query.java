@@ -143,6 +143,32 @@ public class Query implements QueryComponent, ExpressionStack {
     }
 
     /**
+     *
+     * @param defaultTable
+     * @return
+     */
+    public String toSQLQuery(String defaultTable) {
+        String table = getTableName() == null? defaultTable : getTableName();
+        return String.format(
+                "SELECT * FROM %s %s",
+                table,
+                toSQL());
+    }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        if(!hasArguments()) {
+            return "";
+        }
+
+
+        return "WHERE "+ components.stream().map(QueryComponent::toSQL).collect(Collectors.joining(","));
+    }
+
+    /**
      * If none selected default table will be used
      *
      * @param tableName name of the target table
@@ -162,5 +188,14 @@ public class Query implements QueryComponent, ExpressionStack {
     public Query setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
         return this;
+    }
+
+    /**
+     * Used to determine if a query contains any conditions
+     *
+     * @return does query have any components applied
+     */
+    public boolean hasArguments() {
+        return components.size()>0;
     }
 }

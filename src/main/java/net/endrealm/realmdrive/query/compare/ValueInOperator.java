@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.query.compare;
 
 import net.endrealm.realmdrive.query.QueryComponent;
 import net.endrealm.realmdrive.utils.JsonUtils;
+import net.endrealm.realmdrive.utils.MySQLUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -43,5 +44,16 @@ public class ValueInOperator<T extends QueryComponent> extends CompareOperator<T
     public String toJson() {
         return String.format("{\"%s\": { $in: [%s] }}", field,
                 values.stream().map(JsonUtils::parsePrimitive).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format("%s IN ( %s )",
+                field,
+                values.stream().map(MySQLUtils::getSQLRepr).collect(Collectors.joining(","))
+        );
     }
 }

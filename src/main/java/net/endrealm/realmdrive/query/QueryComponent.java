@@ -11,4 +11,9 @@ public interface QueryComponent {
      * @return a json representation according to mongo db
      */
     String toJson();
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    String toSQL();
 }

@@ -1,5 +1,7 @@
 package net.endrealm.realmdrive.utils;
 
+import net.endrealm.realmdrive.exceptions.NotAPrimitiveTypeException;
+
 import java.util.ArrayList;
 
 /**
@@ -49,5 +51,19 @@ public class MySQLUtils {
         }
 
         return String.join("_", parts);
+    }
+
+    /**
+     * Displays a primitive as it would appear in a sql query
+     *
+     * @param value object to look at
+     * @return sql representation of object
+     */
+    public static String getSQLRepr(Object value) {
+        if(!ReflectionUtils.getPrimitiveWrapperTypes().contains(value.getClass())) {
+            return  "\"invalid\"";
+        }
+
+        return "nope"; //TODO: change obj in sql readable obj
     }
 }

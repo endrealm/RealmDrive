@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.query.compare;
 
 import net.endrealm.realmdrive.query.QueryComponent;
 import net.endrealm.realmdrive.utils.JsonUtils;
+import net.endrealm.realmdrive.utils.MySQLUtils;
 
 /**
  * @author johannesjumpertz
@@ -35,5 +36,16 @@ public class LessThanOperator<T extends QueryComponent> extends CompareOperator<
     @Override
     public String toJson() {
         return String.format("{\"%s\": { $lt: %s }}", field, JsonUtils.parsePrimitive(value));
+    }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format("%s < %s",
+                field,
+                MySQLUtils.getSQLRepr(value)
+        );
     }
 }

@@ -12,7 +12,6 @@ import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.query.Query;
 import net.endrealm.realmdrive.utils.MySQLUtils;
-import net.endrealm.realmdrive.utils.ReflectionUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,8 +61,8 @@ public class MySQLBackend implements DriveBackend {
         try {
             MySQLEntity mySQLEntity = new MySQLEntity(driveObject);
             PreparedStatement statement = connection.prepareStatement(
-                    String.format("INSERT INTO '%s' (%s) VALUES (%s)",
-                            mySQLEntity.getTableName(),
+                    String.format("INSERT INTO %s (%s) VALUES (%s)",
+                            "'"+mySQLEntity.getTableName()+"'",
                             mySQLEntity.getKeysAsSQL(),
                             mySQLEntity.getValuesAsSQL())
             );
@@ -82,7 +81,32 @@ public class MySQLBackend implements DriveBackend {
      */
     @Override
     public DriveObject findOne(Query queryDetails) {
+
+        String query = createQuery(queryDetails);
+
         return null;
+    }
+
+    /**
+     * Creates a new mysql query string form the query object
+     *
+     * @param query the query object to use
+     * @return the mysql conform query
+     */
+    @SuppressWarnings("SqlNoDataSourceInspection")
+    private String createQuery(Query query) {
+
+
+
+        return String.format(
+                "SELECT * FROM %s %s",
+                query.getTableName(),
+                query.hasArguments() ? "WHERE "+getParsedArguments(query) : ""
+        );
+    }
+
+    private String getParsedArguments(Query query) {
+        return query.toSQL();
     }
 
     /**

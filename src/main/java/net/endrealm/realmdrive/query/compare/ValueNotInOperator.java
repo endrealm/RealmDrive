@@ -40,4 +40,15 @@ public class ValueNotInOperator<T extends QueryComponent> extends CompareOperato
         return String.format("{\"%s\": { $nin: [%s] }}", field,
                 values.stream().map(JsonUtils::parsePrimitive).collect(Collectors.joining(",")));
     }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format(
+                "NOT ( %s )",
+                new ValueInOperator<>(this).setField(field).addValue(values).toSQL());
+    }
+
 }

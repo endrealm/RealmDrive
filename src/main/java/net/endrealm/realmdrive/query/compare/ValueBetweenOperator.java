@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.query.compare;
 
 import net.endrealm.realmdrive.query.QueryComponent;
 import net.endrealm.realmdrive.utils.JsonUtils;
+import net.endrealm.realmdrive.utils.MySQLUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,5 +80,17 @@ public class ValueBetweenOperator<T extends QueryComponent> extends CompareOpera
             values.add(i);
 
         return values;
+    }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format("%s BETWEEN %s AND %s",
+                field,
+                MySQLUtils.getSQLRepr(startInclusive? start : start+1),
+                MySQLUtils.getSQLRepr(endInclusive? end : end-1)
+        );
     }
 }
