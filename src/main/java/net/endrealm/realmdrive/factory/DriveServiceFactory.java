@@ -13,6 +13,8 @@ public class DriveServiceFactory {
 
     /**
      * Get a drive service
+     *
+     * @param settings the settings used to build the drive service
      * @return a drive service
      */
     public DriveService getDriveService(DriveSettings settings) {

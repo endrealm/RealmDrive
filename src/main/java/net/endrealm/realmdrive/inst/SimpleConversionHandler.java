@@ -30,6 +30,11 @@ public class SimpleConversionHandler implements ConversionHandler {
      * Factory used to instantiate new objects
      */
     private DriveObjectFactory objectFactory;
+
+    /**
+     * The drive service the conversion handler is connected to
+     */
+    private DriveService driveService;
     /**
      * A list of classes considered as primitive
      */
@@ -50,6 +55,8 @@ public class SimpleConversionHandler implements ConversionHandler {
     @Override
     public void registerClasses(Class<?>... classes) {
         this.classes.addAll(Arrays.asList(classes));
+        for(Class<?> clazz : classes)
+            this.driveService.getBackend().prepareEntity(clazz);
     }
 
     /**
@@ -271,5 +278,6 @@ public class SimpleConversionHandler implements ConversionHandler {
     @Override
     public void setService(DriveService service) {
         this.objectFactory = new DriveObjectFactory(service);
+        this.driveService = service;
     }
 }

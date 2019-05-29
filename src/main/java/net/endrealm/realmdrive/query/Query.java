@@ -183,11 +183,15 @@ public class Query implements QueryComponent, ExpressionStack {
     }
 
     /**
+     * This does not work with some databases as they require predefined structures. It is not advised to use this
+     * feature. Rather is it encouraged to create a second service for this.
+     *
      * If none selected default database will be used
      *
      * @param databaseName name of the target database
      * @return this query instance
      */
+    @Deprecated
     public Query setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
         return this;

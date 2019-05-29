@@ -15,6 +15,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.BasicBSONList;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ public class MongoBackend implements DriveBackend {
     /**
      * Send a query directly to the mongo database
      *
+     * @param query the raw query used to send the message
      * @return query response
      */
     public Iterable sendRawQuery(Bson query) {
@@ -83,11 +85,25 @@ public class MongoBackend implements DriveBackend {
      * @param query backend dependant. For MongoDB see {@link com.mongodb.QueryBuilder}
      * @return query response
      */
+    @Deprecated
     @Override
     public Iterable rawQuery(Object query) {
+
         if(!(query instanceof QueryBuilder))
             return null;
+
         return null;//TODO implement
+    }
+
+    /**
+     * Prepares to use a specific entity. This is required for some databases (e.g. MySQL) to work.
+     * It will automatically try to generate and modify tables to fit the entities.
+     *
+     * @param clazz the class of the entity to save
+     */
+    @Override
+    public void prepareEntity(Class<?> clazz) {
+        // Does nothing as mongo does not require predefined structures
     }
 
     /**
