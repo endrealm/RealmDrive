@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class MySQLBackend implements DriveBackend {
 
     private Connection connection;
+    private String table;
 
     /**
      * Creates a connection to the backend
@@ -43,6 +44,7 @@ public class MySQLBackend implements DriveBackend {
      */
     @Override
     public void connect(String hostURL, String username, String password, String database, String table) {
+        this.table = table;
         try {
             this.connection = DriverManager.getConnection(hostURL + "/" + database+"?autoReconnect=true", username,
                     password);
@@ -93,20 +95,8 @@ public class MySQLBackend implements DriveBackend {
      * @param query the query object to use
      * @return the mysql conform query
      */
-    @SuppressWarnings("SqlNoDataSourceInspection")
     private String createQuery(Query query) {
-
-
-
-        return String.format(
-                "SELECT * FROM %s %s",
-                query.getTableName(),
-                query.hasArguments() ? "WHERE "+getParsedArguments(query) : ""
-        );
-    }
-
-    private String getParsedArguments(Query query) {
-        return query.toSQL();
+        return query.toSQLQuery("SELECT", table);
     }
 
     /**

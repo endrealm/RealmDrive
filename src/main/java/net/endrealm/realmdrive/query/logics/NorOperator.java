@@ -120,4 +120,12 @@ public class NorOperator<T extends QueryComponent> extends LogicOperator<T> impl
     public String toJson() {
         return String.format("{$nor: [%s]}",
                 expressions.stream().map(QueryComponent::toJson).collect(Collectors.joining(",")));    }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return new NotOperator<>(this).addOr().addMany(expressions).toSQL();
+    }
 }

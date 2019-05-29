@@ -116,4 +116,13 @@ public class NotOperator<T extends QueryComponent> extends LogicOperator<T> impl
     public String toJson() {
         return String.format("{$not: %s}", expression.toJson());
     }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format(
+                "NOT ( %s )", expression.toSQL());
+    }
 }

@@ -144,13 +144,16 @@ public class Query implements QueryComponent, ExpressionStack {
 
     /**
      *
-     * @param defaultTable
-     * @return
+     *
+     * @param prefix the prefix to use when creating the query e.g. select
+     * @param defaultTable the default table to use when no table is specified in the query
+     * @return sql representation of this query
      */
-    public String toSQLQuery(String defaultTable) {
+    public String toSQLQuery(String prefix, String defaultTable) {
         String table = getTableName() == null? defaultTable : getTableName();
         return String.format(
-                "SELECT * FROM %s %s",
+                "%s * FROM %s %s",
+                prefix,
                 table,
                 toSQL());
     }
@@ -165,7 +168,7 @@ public class Query implements QueryComponent, ExpressionStack {
         }
 
 
-        return "WHERE "+ components.stream().map(QueryComponent::toSQL).collect(Collectors.joining(","));
+        return "WHERE "+ components.stream().map(QueryComponent::toSQL).collect(Collectors.joining(" AND "));
     }
 
     /**

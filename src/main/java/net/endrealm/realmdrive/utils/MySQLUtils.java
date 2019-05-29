@@ -61,7 +61,7 @@ public class MySQLUtils {
      */
     public static String getSQLRepr(Object value) {
         if(!ReflectionUtils.getPrimitiveWrapperTypes().contains(value.getClass())) {
-            return  "\"invalid\"";
+            return  "'invalid'";
         }
 
         return "nope"; //TODO: change obj in sql readable obj

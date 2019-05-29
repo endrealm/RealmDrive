@@ -16,8 +16,7 @@ public class TestMain {
 
         long time = System.currentTimeMillis();
 
-
-        Query query = new Query()
+        Query testAll = new Query()
                 .addAnd()
                     .addEq()
                         .setField("name")
@@ -35,8 +34,17 @@ public class TestMain {
                         .setField("height")
                         .setValue(10)
                     .close()
+                    .addNor()
+                        .addBet()
+                            .setField("size")
+                            .setStart(170)
+                            .setEnd(200)
+                        .close()
+                    .close()
                 .close()
             .build();
+
+        System.out.println(testAll.toSQLQuery("SELECT", "myTable"));
 
         DriveService driveService = new DriveServiceFactory().getDriveService(
                 DriveSettings.builder()

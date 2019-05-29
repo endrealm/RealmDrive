@@ -121,4 +121,15 @@ public class AndOperator<T extends QueryComponent> extends LogicOperator<T> impl
         return String.format("{$and: [%s]}",
                 expressions.stream().map(QueryComponent::toJson).collect(Collectors.joining(",")));
     }
+
+    /**
+     * @return a sql representation according to the jdbc syntax
+     */
+    @Override
+    public String toSQL() {
+        return String.format(
+                "(%s)",
+                expressions.stream().map(e ->  "("+e.toSQL()+")").collect(Collectors.joining(" AND "))
+        );
+    }
 }

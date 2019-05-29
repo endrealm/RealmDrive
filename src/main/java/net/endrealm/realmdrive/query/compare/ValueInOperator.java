@@ -28,7 +28,7 @@ public class ValueInOperator<T extends QueryComponent> extends CompareOperator<T
     public ValueInOperator<T> addValue(@NotNull Object... objects) {
         if(objects == null)
             throw new NullPointerException("Can't add empties to list");
-        values.add(new ArrayList<>(Arrays.asList(objects)));
+        values.addAll(new ArrayList<>(Arrays.asList(objects)));
         return this;
     }
 

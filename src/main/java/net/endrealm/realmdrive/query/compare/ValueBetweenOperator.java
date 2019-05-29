@@ -31,13 +31,24 @@ public class ValueBetweenOperator<T extends QueryComponent> extends CompareOpera
     }
 
     /**
-     * Sets the start value. Exclusive by default. Overwrite this behaviour by calling setStartInclusive(true)
+     * Sets the start value. Inclusive by default. Overwrite this behaviour by calling setStartInclusive(true)
      *
      * @param startVal the start value
      * @return this object instance
      */
     public ValueBetweenOperator<T> setStart(int startVal) {
         this.start = startVal;
+        return this;
+    }
+
+    /**
+     * Sets the start value. Exclusive by default. Overwrite this behaviour by calling setStartInclusive(true)
+     *
+     * @param endVal the end value
+     * @return this object instance
+     */
+    public ValueBetweenOperator<T> setEnd(int endVal) {
+        this.end = endVal;
         return this;
     }
 
