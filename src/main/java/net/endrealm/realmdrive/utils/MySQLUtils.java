@@ -64,6 +64,10 @@ public class MySQLUtils {
             return  "'invalid'";
         }
 
-        return "nope"; //TODO: change obj in sql readable obj
+        if(value instanceof Character ||
+                value instanceof String)
+            return "'"+value+"'";
+
+        return value.toString(); //TODO: change obj in sql readable obj
     }
 }

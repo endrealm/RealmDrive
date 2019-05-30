@@ -162,6 +162,17 @@ public class MySQLBackend implements DriveBackend {
         return null;
     }
 
+    /**
+     * Prepares to use a specific entity. This is required for some databases (e.g. MySQL) to work.
+     * It will automatically try to generate and modify tables to fit the entities.
+     *
+     * @param clazz the class of the entity to save
+     */
+    @Override
+    public void prepareEntity(Class<?> clazz) {
+        //TODO: create tables
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -195,6 +206,10 @@ public class MySQLBackend implements DriveBackend {
                         return "'"+e.toString()+"'";
                     }).collect(Collectors.toList())
             );
+        }
+
+        public String toTable() {
+            return "";//TODO: create table
         }
     }
 }
