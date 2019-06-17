@@ -27,6 +27,11 @@ public class SimpleConversionHandler implements ConversionHandler {
     private ArrayList<Class<?>> classes;
 
     /**
+     * A list of endpoint serializers
+     */
+    private ArrayList<CustomSerializer> serializers;
+
+    /**
      * Factory used to instantiate new objects
      */
     private DriveObjectFactory objectFactory;
@@ -45,6 +50,7 @@ public class SimpleConversionHandler implements ConversionHandler {
      */
     public SimpleConversionHandler() {
         classes = new ArrayList<>();
+        serializers = new ArrayList<>();
         PRIMITIVE_CLASSES = ReflectionUtils.getPrimitiveWrapperTypes();
     }
 
@@ -57,6 +63,11 @@ public class SimpleConversionHandler implements ConversionHandler {
         this.classes.addAll(Arrays.asList(classes));
         for(Class<?> clazz : classes)
             this.driveService.getBackend().prepareEntity(clazz);
+    }
+
+    @Override
+    public void registerSerializers(CustomSerializer... serializers) {
+        this.serializers.addAll(Arrays.asList(serializers));
     }
 
     /**
@@ -73,6 +84,13 @@ public class SimpleConversionHandler implements ConversionHandler {
 
         if(statisticsObject == null || statisticsObject.isEmpty())
             return null;
+
+        {
+            Object object = getConvertedEndpoint(statisticsObject, clazz);
+            if(object != null)
+                //noinspection unchecked
+                return (T) object;
+        }
 
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
@@ -109,8 +127,13 @@ public class SimpleConversionHandler implements ConversionHandler {
                 else {
 
                     Object primitiveValue = value.getPrimitiveValue();
+                    Object convertedEndpoint = getConvertedEndpoint(statisticsObject, clazz);
 
-                    if((field.getType() == float.class || field.getType() == Float.class) && primitiveValue.getClass() == Double.class) {
+                    if(convertedEndpoint != null) {
+                        //noinspection unchecked
+                        field.set(instance, convertedEndpoint);
+                    }
+                    else if((field.getType() == float.class || field.getType() == Float.class) && primitiveValue.getClass() == Double.class) {
                         field.set(instance, (float)((double) primitiveValue));
                     } else
                         field.set(instance, primitiveValue);
@@ -124,6 +147,25 @@ public class SimpleConversionHandler implements ConversionHandler {
             e.printStackTrace();
             throw new ClassCastException(String.format("Failed to cast! Maybe %s does not have an empty public constructor!", clazz.getName()));
         }
+    }
+
+    private Object getConvertedEndpoint(DriveElement element, Class clazz) {
+        for(CustomSerializer serializer : serializers) {
+            if(serializer.supportsClass(clazz)) {
+                return serializer.fromEndpoint(element);
+            }
+        }
+        return null;
+    }
+
+    private DriveElement getElementEndpoint(Object element, Class clazz) {
+        for(CustomSerializer serializer : serializers) {
+            if(serializer.supportsClass(clazz)) {
+                //noinspection unchecked
+                return serializer.toDriveEndpoint(element);
+            }
+        }
+        return null;
     }
 
     /**
@@ -165,6 +207,7 @@ public class SimpleConversionHandler implements ConversionHandler {
             return null;
 
         Class clazz = object.getClass();
+
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
 
@@ -185,7 +228,11 @@ public class SimpleConversionHandler implements ConversionHandler {
 
                 Object value = field.get(object);
 
-                if(PRIMITIVE_CLASSES.contains(value.getClass()))
+                DriveElement driveElement = getElementEndpoint(value, value.getClass());
+                if(driveElement != null) {
+                    statisticsObject.setObject(field.getName(), driveElement);
+                }
+                else if(PRIMITIVE_CLASSES.contains(value.getClass()))
                     statisticsObject.setObject(field.getName(), objectFactory.createPrimitive(value));
                 else if(List.class.isAssignableFrom(field.getType())) {
                     DriveElementArray array = objectFactory.createEmptyArray();
