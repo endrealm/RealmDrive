@@ -18,9 +18,10 @@ public interface ConversionHandler {
     void registerClasses(Class<?>... classes);
 
     /**
-     * Register serializers used to convert complex endpoints to database values
+     * Register serializers used to convert complex endpoints to database values.
+     * Priority follows LiFo, last elements will be prioritised
      *
-     * @param serializers
+     * @param serializers the serializers to add
      */
     void registerSerializers(CustomSerializer... serializers);
 

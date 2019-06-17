@@ -67,7 +67,9 @@ public class SimpleConversionHandler implements ConversionHandler {
 
     @Override
     public void registerSerializers(CustomSerializer... serializers) {
-        this.serializers.addAll(Arrays.asList(serializers));
+        List<CustomSerializer> serializersList = Arrays.asList(serializers);
+        Collections.reverse(serializersList);
+        this.serializers.addAll(0, serializersList);
     }
 
     /**
