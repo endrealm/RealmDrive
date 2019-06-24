@@ -48,14 +48,11 @@ public class DriveObjectFactory {
      *
      * @param value value to be contained
      * @return null if the value isn't a primitive
+     * @throws NotAPrimitiveTypeException when value is not a primitive
      */
-    public DriveElement createPrimitive(Object value) {
-        try {
-            return new SimplePrimitiveDriveElement(value);
-        } catch (NotAPrimitiveTypeException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public DriveElement createPrimitive(Object value) throws NotAPrimitiveTypeException {
+        return new SimplePrimitiveDriveElement(value);
+
     }
 
     public DriveElementArray createEmptyArray() {

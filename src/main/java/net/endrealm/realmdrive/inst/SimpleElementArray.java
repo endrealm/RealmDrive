@@ -79,7 +79,7 @@ public class SimpleElementArray implements DriveElementArray {
      * @param object primitive type object
      */
     @Override
-    public void addPrimitive(int num, Object object) {
+    public void addPrimitive(int num, Object object) throws NotAPrimitiveTypeException {
         addObject(num, factory.createPrimitive(object));
     }
 
@@ -122,7 +122,7 @@ public class SimpleElementArray implements DriveElementArray {
      * @param object element to be added
      */
     @Override
-    public void addPrimitive(Object object) {
+    public void addPrimitive(Object object) throws NotAPrimitiveTypeException {
         list.add(factory.createPrimitive(object));
     }
 
@@ -212,7 +212,7 @@ public class SimpleElementArray implements DriveElementArray {
      */
     @Override
     public DriveObject getAsObject() throws ClassCastException {
-        return  null;
+        throw new ClassCastException("Drive Array is not an object");
     }
 
     /**
