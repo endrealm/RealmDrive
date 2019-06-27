@@ -177,7 +177,7 @@ public class SimpleConversionHandler implements ConversionHandler {
 
         try {
 
-            statisticsObject.setPrimitive("classType", object.getClass().getName());
+            statisticsObject.setPrimitive("className", object.getClass().getName());
 
             for(Field field : fieldList) {
                 boolean protection = field.isAccessible();

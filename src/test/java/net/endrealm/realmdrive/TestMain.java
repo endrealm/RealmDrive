@@ -1,11 +1,11 @@
-package net.endrealm.realmdrive.testing;
+package net.endrealm.realmdrive;
 
 import net.endrealm.realmdrive.factory.DriveServiceFactory;
 import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.query.Query;
-import net.endrealm.realmdrive.testing.model.Bar;
-import net.endrealm.realmdrive.testing.model.Baz;
-import net.endrealm.realmdrive.testing.model.Foo;
+import net.endrealm.realmdrive.model.Bar;
+import net.endrealm.realmdrive.model.Baz;
+import net.endrealm.realmdrive.model.Foo;
 import net.endrealm.realmdrive.utils.DriveSettings;
 
 import java.util.ArrayList;
