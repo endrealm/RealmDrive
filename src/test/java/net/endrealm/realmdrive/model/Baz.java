@@ -1,4 +1,4 @@
-package net.endrealm.realmdrive.testing.model;
+package net.endrealm.realmdrive.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

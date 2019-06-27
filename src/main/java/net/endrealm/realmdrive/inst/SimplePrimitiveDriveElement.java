@@ -112,7 +112,7 @@ public class SimplePrimitiveDriveElement implements DriveElement {
      */
     @Override
     public DriveObject getAsObject() throws ClassCastException {
-        return null;
+        throw new ClassCastException("This is a primitive drive element, not a drive object");
     }
 
     /**

@@ -78,7 +78,11 @@ public class SimpleDriveObject implements DriveObject {
      */
     @Override
     public void setPrimitive(String key, Object object) {
-        elementHashMap.put(key, factory.createPrimitive(object));
+        try {
+            elementHashMap.put(key, factory.createPrimitive(object));
+        } catch (NotAPrimitiveTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
