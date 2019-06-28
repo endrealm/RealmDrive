@@ -110,6 +110,16 @@ public class SimpleConversionHandler implements ConversionHandler {
                 if(value == null)
                     throw new ClassCastException(String.format("Found unmapped field %s in %s!", field.getName(), field.getDeclaringClass().getName()));
 
+                {
+                    Object object = getConvertedEndpoint(value, field.getType());
+                    if(object != null) {
+                        //noinspection unchecked
+                        field.set(instance, object);
+                        continue;
+                    }
+
+                }
+
                 if(value instanceof DriveElementArray) {
                     DriveElementArray array = value.getAsElementArray();
 
@@ -246,8 +256,9 @@ public class SimpleConversionHandler implements ConversionHandler {
                     }
                     statisticsObject.setObject(field.getName(), array);
                 }
-                else
+                else {
                     statisticsObject.setObject(field.getName(), transform(value));
+                }
 
                 field.setAccessible(protection);
             }

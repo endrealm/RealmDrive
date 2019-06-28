@@ -3,12 +3,11 @@ package net.endrealm.realmdrive;
 import net.endrealm.realmdrive.factory.DriveObjectFactory;
 import net.endrealm.realmdrive.inst.SimpleConversionHandler;
 import net.endrealm.realmdrive.inst.SimpleDriveService;
+import net.endrealm.realmdrive.inst.serializers.UUIDSerializer;
 import net.endrealm.realmdrive.interfaces.DriveBackend;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
-import net.endrealm.realmdrive.model.Bar;
 import net.endrealm.realmdrive.model.Baz;
-import net.endrealm.realmdrive.model.Foo;
 import org.junit.jupiter.api.*;
 
 import java.util.UUID;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.mock;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Conversion Handler Tests")
+@DisplayName("Endpoint Serializers Tests")
 class SerializerTests {
     private final DriveObjectFactory factory;
     private final SimpleConversionHandler conversionHandler;
@@ -32,6 +31,7 @@ class SerializerTests {
         conversionHandler.setService(service);
 
         conversionHandler.registerClasses(Baz.class);
+        conversionHandler.registerSerializers(new UUIDSerializer());
 
         this.factory = new DriveObjectFactory(service);
 
@@ -44,11 +44,13 @@ class SerializerTests {
     }
 
     @Test
-    @DisplayName("Serialization Test")
+    @DisplayName("Endpoint Serialization Test")
     @Order(1)
     void testSerialize() {
         Baz baz = new Baz("Hey", UUID.randomUUID());
 
-        System.out.println(conversionHandler.stringify(conversionHandler.transform(baz)));
+        DriveObject driveObject = conversionHandler.transform(baz);
+
+        assertEquals(baz, conversionHandler.transformAutomatically(driveObject));
     }
 }
