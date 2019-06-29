@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.endrealm.realmdrive.annotations.SaveVar;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +15,5 @@ public class Baz {
     @SaveVar
     private String value0;
     @SaveVar
-    private List<Bar> value1;
+    private UUID value1;
 }

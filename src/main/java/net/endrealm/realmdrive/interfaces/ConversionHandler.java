@@ -18,6 +18,14 @@ public interface ConversionHandler {
     void registerClasses(Class<?>... classes);
 
     /**
+     * Register serializers used to convert complex endpoints to database values.
+     * Priority follows LiFo, last elements will be prioritised
+     *
+     * @param serializers the serializers to add
+     */
+    void registerSerializers(CustomSerializer... serializers);
+
+    /**
      * Transforms a stats object into a classes object. Target class must be registered.
      *
      * @param statisticsObject the object to convert

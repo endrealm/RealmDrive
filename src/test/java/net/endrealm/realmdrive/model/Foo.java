@@ -3,6 +3,10 @@ package net.endrealm.realmdrive.model;
 import lombok.Data;
 import net.endrealm.realmdrive.annotations.SaveVar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Data
 public class Foo {
 
@@ -19,18 +23,18 @@ public class Foo {
     @SaveVar
     private double value5;
     @SaveVar
-    private Bar bar;
+    private List<Bar> bar;
 
     public Foo() {
     }
 
-    public Foo(char value0, String value1, int value2, long value3, float value4, double value5, Bar bar) {
+    public Foo(char value0, String value1, int value2, long value3, float value4, double value5, Bar... bar) {
         this.value0 = value0;
         this.value1 = value1;
         this.value2 = value2;
         this.value3 = value3;
         this.value4 = value4;
         this.value5 = value5;
-        this.bar = bar;
+        this.bar = new ArrayList<>(Arrays.asList(bar));
     }
 }
