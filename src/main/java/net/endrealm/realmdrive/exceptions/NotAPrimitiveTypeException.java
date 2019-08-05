@@ -5,7 +5,7 @@ package net.endrealm.realmdrive.exceptions;
  *
  * Exception thrown when an inserted value is not a primitive although it should be
  */
-public class NotAPrimitiveTypeException extends Exception {
+public class NotAPrimitiveTypeException extends RuntimeException {
 
     /**
      * Creates a new empty primitive exception

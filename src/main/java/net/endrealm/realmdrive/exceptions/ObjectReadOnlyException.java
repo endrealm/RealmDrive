@@ -5,7 +5,7 @@ package net.endrealm.realmdrive.exceptions;
  *
  * Thrown if trying to call a write operation on a read only object
  */
-public class ObjectReadOnlyException extends Exception {
+public class ObjectReadOnlyException extends RuntimeException {
 
     /**
      * Creates a new readonly exception
