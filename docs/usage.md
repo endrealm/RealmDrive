@@ -1,8 +1,10 @@
 # Usage
 ## Build
-This project currently has no pre-built versions. The only way to get the dependency jar is to build it yourself.
-### Build with Maven
+It is recommended to use the Releases on Maven Central [here](https://search.maven.org/artifact/net.endrealm/realm-drive/)
+### Build with Maven (optional)
 **Used IDE:** *Intellij IDEA*
+Only use this method if there is some issue to grab it from the maven central repository or if you want to use development builds.
+
 1. Clone or download the project
 2. Open project folder with the IDE
 3. Right-Click the pom.xml and hit add as maven project
@@ -18,7 +20,7 @@ Add the following dependency to your pom.xml
 <dependency>
     <groupId>net.endrealm</groupId>
     <artifactId>realm-drive</artifactId>
-    <version>0.0.1-PRE</version>
+    <version>1.0.0-RELEASE</version>
     <scope>compile</scope>
 </dependency>
 ```

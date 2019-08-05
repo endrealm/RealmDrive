@@ -36,6 +36,7 @@ public class SimpleDriveService implements DriveService {
      * @param driveBackend the backend to be used
      * @param reader the reader to be used
      * @param writer the writer to be used
+     * @param conversionHandler the conversion handler used for conversion
      */
     public SimpleDriveService(DriveBackend driveBackend, DriveReader reader, DriveWriter writer, ConversionHandler conversionHandler) {
         this.reader = reader;

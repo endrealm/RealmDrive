@@ -20,6 +20,7 @@ public class BsonUtils {
      * Converts a Json document into a drive object
      *
      * @param jsonObject json to be converted
+     * @param objectFactory object factory used to instantiate new objects
      * @return the drive object
      *
      */
