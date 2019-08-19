@@ -46,6 +46,7 @@ public interface DriveWriter {
      * @param overwrite should existing parameters be overwritten? If not a new value will be inserted.
      * @param queryDetails used two find duplicates
      */
+    @Deprecated
     void write(DriveObject element, boolean overwrite, Query queryDetails);
 
     /**
@@ -56,6 +57,7 @@ public interface DriveWriter {
      * @param queryDetails used two find duplicates
      * @param onFinish invoked upon finish
      */
+    @Deprecated
     void writeAsync(DriveObject element, boolean overwrite, Query queryDetails, Runnable onFinish);
 
 
@@ -66,6 +68,7 @@ public interface DriveWriter {
      * @param overwrite should existing parameters be overwritten? If not a new value will be inserted.
      * @param queryDetails used two find duplicates
      */
+    @Deprecated
     void write(Object object, boolean overwrite, Query queryDetails);
 
     /**
@@ -76,7 +79,48 @@ public interface DriveWriter {
      * @param queryDetails used two find duplicates
      * @param onFinish invoked upon finish
      */
+    @Deprecated
     void writeAsync(Object object, boolean overwrite, Query queryDetails, Runnable onFinish);
+
+
+    /**
+     * Write an entry to the backend.
+     *
+     * @param element element to be inserted
+     * @param queryDetails used two find duplicates
+     */
+    @Deprecated
+    void replace(DriveObject element, Query queryDetails);
+
+    /**
+     * Write an entry to the backend.
+     *
+     * @param element element to be inserted
+     * @param queryDetails used two find duplicates
+     * @param onFinish invoked upon finish
+     */
+    @Deprecated
+    void replaceAsync(DriveObject element, Query queryDetails, Runnable onFinish);
+
+
+    /**
+     * Write an entry to the backend.
+     *
+     * @param object element to be inserted, will be transformed automatically
+     * @param queryDetails used two find duplicates
+     */
+    @Deprecated
+    void replace(Object object, Query queryDetails);
+
+    /**
+     * Write an entry to the backend.
+     *
+     * @param object element to be inserted, will be transformed automatically
+     * @param queryDetails used two find duplicates
+     * @param onFinish invoked upon finish
+     */
+    @Deprecated
+    void replaceAsync(Object object, Query queryDetails, Runnable onFinish);
 
     /**
      * Deletes entries matching the query from the backend

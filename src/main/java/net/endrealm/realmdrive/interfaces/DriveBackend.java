@@ -61,6 +61,14 @@ public interface DriveBackend {
     void writeReplace(DriveObject element, Query queryDetails);
 
     /**
+     * Replaces the first element that matches the query
+     *
+     * @param element element that will replace the matched element
+     * @param query used to filter for replacing
+     */
+    void replace(DriveObject element, Query query);
+
+    /**
      * Deletes all entries matched by the query
      *
      * @param queryDetails the query details used to filter

@@ -1,9 +1,6 @@
 package net.endrealm.realmdrive.inst;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.QueryBuilder;
+import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -44,7 +41,8 @@ public class MongoBackend implements DriveBackend {
     @Override
     public void connect(String hostURL, String username, String password, String database, String table) {
         assert hostURL != null;
-        this.mongoClient = new MongoClient(new MongoClientURI(hostURL));
+
+        this.mongoClient = new MongoClient(new MongoClientURI(hostURL, MongoClientOptions.builder().heartbeatFrequency(1000)));
         assert database != null;
         this.database = mongoClient.getDatabase(database);
         assert table != null;
@@ -228,9 +226,15 @@ public class MongoBackend implements DriveBackend {
      * @param queryDetails used to filter for deletion
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void writeReplace(DriveObject element, Query queryDetails) {
-        collection.replaceOne(readQuery(queryDetails), toMongoDocument(element));
+        delete(queryDetails);
+        write(element);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void replace(DriveObject element, Query query) {
+        collection.replaceOne(readQuery(query), toMongoDocument(element));
     }
 
     /**

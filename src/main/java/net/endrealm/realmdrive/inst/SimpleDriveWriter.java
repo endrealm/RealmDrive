@@ -133,6 +133,30 @@ public class SimpleDriveWriter implements DriveWriter {
         );
     }
 
+    @Override
+    public void replace(DriveObject element, Query queryDetails) {
+        driveService.getBackend().replace(element, queryDetails);
+    }
+
+    @Override
+    public void replaceAsync(DriveObject element, Query queryDetails, Runnable onFinish) {
+        ThreadUtils.createNewThread(() -> {
+           replace(element, queryDetails);
+           onFinish.run();
+        });
+    }
+
+    @Override
+    public void replace(Object object, Query queryDetails) {
+        replace(driveService.getConversionHandler().transform(object), queryDetails);
+    }
+
+    @Override
+    public void replaceAsync(Object object, Query queryDetails, Runnable onFinish) {
+        replaceAsync(driveService.getConversionHandler().transform(object), queryDetails, onFinish);
+
+    }
+
     /**
      * Deletes entries matching the query from the backend
      *
