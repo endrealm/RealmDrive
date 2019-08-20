@@ -26,8 +26,9 @@ public interface DriveBackend {
      * Writes an object to the database.
      *
      * @param driveObject object to save
+     * @param query used to define a custom collection
      */
-    void write(DriveObject driveObject);
+    void write(DriveObject driveObject, Query query);
 
     /**
      * Reads one object matching the query parameters

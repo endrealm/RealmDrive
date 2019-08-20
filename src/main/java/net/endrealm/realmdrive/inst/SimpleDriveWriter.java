@@ -21,53 +21,52 @@ public class SimpleDriveWriter implements DriveWriter {
      */
     private DriveService driveService;
 
-    /**
-     * Write an entry to the backend. When already existent two entries will exist.
-     *
-     * @param element element to be inserted
-     */
     @Override
     public void write(DriveObject element) {
-        driveService.getBackend().write(element);
+        write(element, new Query().build());
     }
 
-    /**
-     * Write an entry to the backend. When already existent two entries will exist.
-     *
-     * @param element  element to be inserted
-     * @param onFinish invoked upon finish
-     */
     @Override
     public void writeAsync(DriveObject element, Runnable onFinish) {
+        writeAsync(element, new Query().build(), onFinish);
+    }
+
+    @Override
+    public void write(Object object) {
+        write(object, new Query());
+    }
+
+    @Override
+    public void writeAsync(Object object, Runnable onFinish) {
+        writeAsync(object, new Query().build(), onFinish);
+
+    }
+
+    @Override
+    public void write(DriveObject element, Query query) {
+        driveService.getBackend().write(element, query);
+    }
+
+    @Override
+    public void writeAsync(DriveObject element, Query query, Runnable onFinish) {
         ThreadUtils.createNewThread(
-            () -> {
-                write(element);
-                onFinish.run();
-            }
+                () -> {
+                    write(element, query);
+                    onFinish.run();
+                }
         );
     }
 
-    /**
-     * Write an entry to the backend. When already existent two entries will exist.
-     *
-     * @param object element to be inserted, will be transformed automatically
-     */
     @Override
-    public void write(Object object) {
-        write(driveService.getConversionHandler().transform(object));
+    public void write(Object object, Query query) {
+        write(driveService.getConversionHandler().transform(object), query);
     }
 
-    /**
-     * Write an entry to the backend. When already existent two entries will exist.
-     *
-     * @param object   element to be inserted, will be transformed automatically
-     * @param onFinish invoked upon finish
-     */
     @Override
-    public void writeAsync(Object object, Runnable onFinish) {
+    public void writeAsync(Object object, Query query, Runnable onFinish) {
         ThreadUtils.createNewThread(
                 () -> {
-                    write(object);
+                    write(object, query);
                     onFinish.run();
                 }
         );

@@ -40,6 +40,40 @@ public interface DriveWriter {
     void writeAsync(Object object, Runnable onFinish);
 
     /**
+     * Write an entry to the backend. When already existent two entries will exist.
+     *
+     * @param element element to be inserted
+     * @param query used to define the targeted table
+     */
+    void write(DriveObject element, Query query);
+
+    /**
+     * Write an entry to the backend. When already existent two entries will exist.
+     *
+     * @param element element to be inserted
+     * @param query used to define the targeted table
+     * @param onFinish invoked upon finish
+     */
+    void writeAsync(DriveObject element, Query query, Runnable onFinish);
+
+    /**
+     * Write an entry to the backend. When already existent two entries will exist.
+     *
+     * @param object element to be inserted, will be transformed automatically
+     * @param query used to define the targeted table
+     */
+    void write(Object object, Query query);
+
+    /**
+     * Write an entry to the backend. When already existent two entries will exist.
+     *
+     * @param object element to be inserted, will be transformed automatically
+     * @param query used to define the targeted table
+     * @param onFinish invoked upon finish
+     */
+    void writeAsync(Object object, Query query, Runnable onFinish);
+
+    /**
      * Write an entry to the backend.
      *
      * @param element element to be inserted

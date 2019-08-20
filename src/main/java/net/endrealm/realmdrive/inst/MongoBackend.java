@@ -58,13 +58,9 @@ public class MongoBackend implements DriveBackend {
         this.driveService = service;
     }
 
-    /**
-     * Writes an object to the database.
-     * @param driveObject object to save
-     */
     @Override
     @SuppressWarnings("unchecked")
-    public void write(DriveObject driveObject) {
+    public void write(DriveObject driveObject, Query query) {
         collection.insertOne(toMongoDocument(driveObject));
     }
 
@@ -145,7 +141,7 @@ public class MongoBackend implements DriveBackend {
     @Override
     public List<DriveObject> findAll(Query queryDetails) {
         Document query = readQuery(queryDetails);
-        FindIterable iterable = collection.find(query);
+        FindIterable iterable = readCollectionFromQuery(queryDetails).find(query);
         ArrayList<DriveObject> result = new ArrayList<>();
         for(Object item : iterable) {
             Document document = (Document) item;
@@ -228,13 +224,13 @@ public class MongoBackend implements DriveBackend {
     @Override
     public void writeReplace(DriveObject element, Query queryDetails) {
         delete(queryDetails);
-        write(element);
+        write(element, queryDetails);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void replace(DriveObject element, Query query) {
-        collection.replaceOne(readQuery(query), toMongoDocument(element));
+        readCollectionFromQuery(query).replaceOne(readQuery(query), toMongoDocument(element));
     }
 
     /**
@@ -244,7 +240,7 @@ public class MongoBackend implements DriveBackend {
      */
     @Override
     public void deleteAll(Query queryDetails) {
-        collection.deleteMany(readQuery(queryDetails));
+        readCollectionFromQuery(queryDetails).deleteMany(readQuery(queryDetails));
     }
 
     /**
@@ -254,6 +250,6 @@ public class MongoBackend implements DriveBackend {
      */
     @Override
     public void delete(Query queryDetails) {
-        collection.deleteOne(readQuery(queryDetails));
+        readCollectionFromQuery(queryDetails).deleteOne(readQuery(queryDetails));
     }
 }
