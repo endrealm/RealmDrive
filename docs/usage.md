@@ -87,8 +87,8 @@ ConversionHandler conversion = service.getConversionHandler();
 conversion.registerClasses(GreatEntity.class);
 ```
 
-#### Making existing classes compatible
-At some point you will probably want to store some of java's various classes (e.g. UUID, Date,...) or those of other libraries. The classes Date and UUID are supported by default. They are used using LIFO so it is possible to overwrite them, by just adding serializers supporting those classes.
+#### Adding custom serializers
+At some point you will probably want to store some of java's various classes (e.g. UUID, Date,...), those of other libraries or just want to change how a specific class is saved in general. The classes Date and UUID are supported by default. Serializers are used according to LIFO so it is possible to overwrite them, by just adding serializers supporting those classes.
 
 First of all you have to implement Custom Serializer
 ```java
