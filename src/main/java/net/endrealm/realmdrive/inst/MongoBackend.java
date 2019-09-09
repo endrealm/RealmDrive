@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author johannesjumpertz
  *
  * A backend implementation for the MongoDB system
  */
