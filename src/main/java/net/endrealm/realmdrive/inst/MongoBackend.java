@@ -60,7 +60,7 @@ public class MongoBackend implements DriveBackend {
     @Override
     @SuppressWarnings("unchecked")
     public void write(DriveObject driveObject, Query query) {
-        collection.insertOne(toMongoDocument(driveObject));
+        readCollectionFromQuery(query).insertOne(toMongoDocument(driveObject));
     }
 
     /**
