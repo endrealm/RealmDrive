@@ -1,9 +1,6 @@
 package net.endrealm.realmdrive.inst;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.QueryBuilder;
+import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -21,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author johannesjumpertz
  *
  * A backend implementation for the MongoDB system
  */
@@ -44,7 +40,8 @@ public class MongoBackend implements DriveBackend {
     @Override
     public void connect(String hostURL, String username, String password, String database, String table) {
         assert hostURL != null;
-        this.mongoClient = new MongoClient(new MongoClientURI(hostURL));
+
+        this.mongoClient = new MongoClient(new MongoClientURI(hostURL, MongoClientOptions.builder().heartbeatFrequency(1000)));
         assert database != null;
         this.database = mongoClient.getDatabase(database);
         assert table != null;
@@ -60,13 +57,9 @@ public class MongoBackend implements DriveBackend {
         this.driveService = service;
     }
 
-    /**
-     * Writes an object to the database.
-     * @param driveObject object to save
-     */
     @Override
     @SuppressWarnings("unchecked")
-    public void write(DriveObject driveObject) {
+    public void write(DriveObject driveObject, Query query) {
         collection.insertOne(toMongoDocument(driveObject));
     }
 
@@ -147,7 +140,7 @@ public class MongoBackend implements DriveBackend {
     @Override
     public List<DriveObject> findAll(Query queryDetails) {
         Document query = readQuery(queryDetails);
-        FindIterable iterable = collection.find(query);
+        FindIterable iterable = readCollectionFromQuery(queryDetails).find(query);
         ArrayList<DriveObject> result = new ArrayList<>();
         for(Object item : iterable) {
             Document document = (Document) item;
@@ -228,9 +221,15 @@ public class MongoBackend implements DriveBackend {
      * @param queryDetails used to filter for deletion
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void writeReplace(DriveObject element, Query queryDetails) {
-        collection.replaceOne(readQuery(queryDetails), toMongoDocument(element));
+        delete(queryDetails);
+        write(element, queryDetails);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void replace(DriveObject element, Query query) {
+        readCollectionFromQuery(query).replaceOne(readQuery(query), toMongoDocument(element));
     }
 
     /**
@@ -240,7 +239,7 @@ public class MongoBackend implements DriveBackend {
      */
     @Override
     public void deleteAll(Query queryDetails) {
-        collection.deleteMany(readQuery(queryDetails));
+        readCollectionFromQuery(queryDetails).deleteMany(readQuery(queryDetails));
     }
 
     /**
@@ -250,6 +249,6 @@ public class MongoBackend implements DriveBackend {
      */
     @Override
     public void delete(Query queryDetails) {
-        collection.deleteOne(readQuery(queryDetails));
+        readCollectionFromQuery(queryDetails).deleteOne(readQuery(queryDetails));
     }
 }

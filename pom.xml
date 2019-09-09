@@ -4,7 +4,7 @@
 
     <artifactId>realm-drive</artifactId>
     <groupId>net.endrealm</groupId>
-    <version>1.1.0-RELEASE</version>
+    <version>1.1.2-RELEASE</version>
     <name>Realm Drive</name>
     <description>
         A database adapter allowing to switch different databases without requiring users to change their code.
@@ -42,7 +42,7 @@
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
     </distributionManagement>
 
@@ -66,7 +66,6 @@
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
-    </dependencies>
 
         <!-- Testing libraries -->
         <!-- JUnit for testing -->
@@ -96,6 +95,7 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+    </dependencies>
 
     <scm>
         <connection>scm:git:git://github.com/dexecutor/dependent-tasks-executor.git</connection>

@@ -26,8 +26,9 @@ public interface DriveBackend {
      * Writes an object to the database.
      *
      * @param driveObject object to save
+     * @param query used to define a custom collection
      */
-    void write(DriveObject driveObject);
+    void write(DriveObject driveObject, Query query);
 
     /**
      * Reads one object matching the query parameters
@@ -59,6 +60,14 @@ public interface DriveBackend {
      * @param queryDetails used to filter for deletion
      */
     void writeReplace(DriveObject element, Query queryDetails);
+
+    /**
+     * Replaces the first element that matches the query
+     *
+     * @param element element that will replace the matched element
+     * @param query used to filter for replacing
+     */
+    void replace(DriveObject element, Query query);
 
     /**
      * Deletes all entries matched by the query

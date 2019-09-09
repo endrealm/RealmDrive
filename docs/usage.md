@@ -20,7 +20,7 @@ Add the following dependency to your pom.xml
 <dependency>
     <groupId>net.endrealm</groupId>
     <artifactId>realm-drive</artifactId>
-    <version>1.0.0-RELEASE</version>
+    <version>1.1.2-RELEASE</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -80,12 +80,55 @@ public class GreatEntity {
 ```
 **Note** All variables, but `feet` are annotated with @SaveVar. Only those annotated will be saved and retrieved.
 #### Register classes
-Now we will want to go ahead and tell the conversion handler that this class can be saved. This is required to automatically transform database entries to classes.
+Now we will want to go ahead and tell the conversion handler that this class can be saved. This is required to automatically transform database entries to classes. While you will not be able to store them directly into the database you can define serializers that will allow you using them as fields.
 ```java
 //service is the implementation of DriveService
 ConversionHandler conversion = service.getConversionHandler();
 conversion.registerClasses(GreatEntity.class);
 ```
+
+#### Adding custom serializers
+At some point you will probably want to store some of java's various classes (e.g. UUID, Date,...), those of other libraries or just want to change how a specific class is saved in general. The classes Date and UUID are supported by default. Serializers are used according to LIFO so it is possible to overwrite them, by just adding serializers supporting those classes.
+
+First of all you have to implement Custom Serializer
+```java
+public class DateSerializer implements CustomSerializer<Date> {
+
+    @Override
+    public DriveElement toDriveEndpoint(Date element) {
+        try {
+            return new SimplePrimitiveDriveElement(element.getTime());
+        } catch (NotAPrimitiveTypeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Date fromEndpoint(DriveElement endpoint) {
+        try {
+            return new Date(endpoint.getAsLong());
+        } catch (NotAPrimitiveTypeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean supportsClass(Class clazz) {
+        return Date.class.equals(clazz);
+    }
+}
+```
+To register it you do almost the same, as you would when registering new classes.
+```java
+//service is the implementation of DriveService
+ConversionHandler conversion = service.getConversionHandler();
+conversion.registerSerializers(new DateSerializer());
+```
+Classes supported by default (current version):
+ - UUID
+ - Date
 
 #### Writing
 Now we are going to write objects to our database. We are going to keep using our example class `GreatEntity`, our DriveService instance `service` and the retrieved instance of the ConversionHandler named `conversion`. From here it is pretty straight forward.
