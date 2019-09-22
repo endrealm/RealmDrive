@@ -102,18 +102,26 @@ public class SimpleConversionHandler implements ConversionHandler {
             T instance = constructor.newInstance();
 
             for(Field field : ReflectionUtils.getAllAnnotatedFields(clazz, SaveVar.class)) {
+                SaveVar saveVar = field.getAnnotation(SaveVar.class);
+
                 boolean protection = field.isAccessible();
                 field.setAccessible(true);
 
                 DriveElement value = statisticsObject.get(field.getName());
 
-                if(value == null)
+                // Value not found in object
+                if(value == null) {
+
+                    // if this field is only optional skip it
+                    if(saveVar.optional())
+                        continue;
+
                     throw new ClassCastException(String.format("Found unmapped field %s in %s!", field.getName(), field.getDeclaringClass().getName()));
+                }
 
                 {
                     Object object = getConvertedEndpoint(value, field.getType());
                     if(object != null) {
-                        //noinspection unchecked
                         field.set(instance, object);
                         continue;
                     }
