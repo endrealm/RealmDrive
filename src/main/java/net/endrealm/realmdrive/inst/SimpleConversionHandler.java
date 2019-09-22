@@ -243,10 +243,21 @@ public class SimpleConversionHandler implements ConversionHandler {
             statisticsObject.setPrimitive("className", object.getClass().getName());
 
             for(Field field : fieldList) {
+                SaveVar saveVar = field.getAnnotation(SaveVar.class);
+
                 boolean protection = field.isAccessible();
                 field.setAccessible(true);
 
                 Object value = field.get(object);
+
+                if(value == null) {
+
+                    // if this field is only optional skip it
+                    if(saveVar.optional())
+                        continue;
+
+                    throw new ClassCastException(String.format("Found empty non optional field %s in %s!", field.getName(), field.getDeclaringClass().getName()));
+                }
 
                 DriveElement driveElement = getElementEndpoint(value, value.getClass());
                 if(driveElement != null) {
