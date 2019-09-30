@@ -56,7 +56,7 @@ public class BsonUtils {
                             array.addObject(unStringify((Document) obj, objectFactory));
                             //handle primitives
                         } else
-                            array.addPrimitive(element);
+                            array.addPrimitive(obj);
                     }
                     statisticsObject.setObject(entry.getKey(), array);
                     //handle primitives
