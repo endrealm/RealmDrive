@@ -3,11 +3,14 @@ package net.endrealm.realmdrive;
 import net.endrealm.realmdrive.factory.DriveObjectFactory;
 import net.endrealm.realmdrive.inst.SimpleConversionHandler;
 import net.endrealm.realmdrive.inst.SimpleDriveService;
+import net.endrealm.realmdrive.inst.serializers.DateSerializer;
+import net.endrealm.realmdrive.inst.serializers.EnumSerializer;
 import net.endrealm.realmdrive.inst.serializers.UUIDSerializer;
 import net.endrealm.realmdrive.interfaces.DriveBackend;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.model.Baz;
+import net.endrealm.realmdrive.model.Chaz;
 import org.junit.jupiter.api.*;
 
 import java.util.UUID;
@@ -31,7 +34,7 @@ class SerializerTests {
         conversionHandler.setService(service);
 
         conversionHandler.registerClasses(Baz.class);
-        conversionHandler.registerSerializers(new UUIDSerializer());
+        conversionHandler.registerSerializers(new UUIDSerializer(), new DateSerializer(), new EnumSerializer());
 
         this.factory = new DriveObjectFactory(service);
 
@@ -47,7 +50,7 @@ class SerializerTests {
     @DisplayName("Endpoint Serialization Test")
     @Order(1)
     void testSerialize() {
-        Baz baz = new Baz("Hey", UUID.randomUUID());
+        Baz baz = new Baz("Hey", UUID.randomUUID(), Chaz.JACK);
 
         DriveObject driveObject = conversionHandler.transform(baz);
 

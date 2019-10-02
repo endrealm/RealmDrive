@@ -164,7 +164,8 @@ public class SimpleConversionHandler implements ConversionHandler {
     private Object getConvertedEndpoint(DriveElement element, Class clazz) {
         for(CustomSerializer serializer : serializers) {
             if(serializer.supportsClass(clazz)) {
-                return serializer.fromEndpoint(element);
+                //noinspection unchecked
+                return serializer.fromEndpoint(element, clazz);
             }
         }
         return null;
