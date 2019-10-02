@@ -16,4 +16,6 @@ public class Baz {
     private String value0;
     @SaveVar
     private UUID value1;
+    @SaveVar
+    private Chaz chaz;
 }
