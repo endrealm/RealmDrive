@@ -27,6 +27,16 @@ public class ReflectionUtils {
     }
 
     /**
+     * Retrieves all fields of a class.
+     * Method searches super classes as well. Fields can be private, protected, public or package private.
+     * @param type class to scan
+     * @return list of fields
+     */
+    public static List<Field> getAllFields(Class<?> type) {
+        return getAllFields(new ArrayList<>(), type);
+    }
+
+    /**
      * Finds all fields with at least one of the specified annotations.
      * Method searches super classes as well. Fields can be private, protected, public or package private.
      *

@@ -20,7 +20,7 @@ public class DateSerializer implements CustomSerializer<Date> {
     }
 
     @Override
-    public Date fromEndpoint(DriveElement endpoint) {
+    public Date fromEndpoint(DriveElement endpoint, Class<Date> dateClass) {
         try {
             return new Date(endpoint.getAsLong());
         } catch (NotAPrimitiveTypeException e) {

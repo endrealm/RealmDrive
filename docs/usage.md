@@ -50,35 +50,7 @@ DriveService service = new DriveServiceFactory().getDriveService(settings);
 ```
 
 #### Marking fields
-Now that you have your service you will probably want to start mapping your first classes. As an example we will map the class `GreatEntity` here.
-```java
-public class GreatEntity {
-
-  //No-Args constructor is required, when reading values
-  public GreatEntity() {
-    this.feet = 2;
-  }
-  
-  public GreatEntity(String entityName, int age, String[] addresses, int feet) {
-    this.entityName = entityName;
-    this.age = age;
-    this.addresses = addresses;
-    this.feet = feet;
-  }
-
-  @SaveVar
-  private String entityName;
-  
-  @SaveVar
-  private int age;
-  
-  @SaveVar
-  private String[] addresses;
-  
-  private int feet;
-}
-```
-**Note** All variables, but `feet` are annotated with @SaveVar. Only those annotated will be saved and retrieved.
+Read more about it [here](./annotations.md)
 #### Register classes
 Now we will want to go ahead and tell the conversion handler that this class can be saved. This is required to automatically transform database entries to classes. While you will not be able to store them directly into the database you can define serializers that will allow you using them as fields.
 ```java

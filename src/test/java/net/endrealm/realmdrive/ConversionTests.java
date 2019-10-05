@@ -7,6 +7,7 @@ import net.endrealm.realmdrive.interfaces.DriveBackend;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.model.Bar;
+import net.endrealm.realmdrive.model.Choo;
 import net.endrealm.realmdrive.model.Foo;
 import org.junit.jupiter.api.*;
 
@@ -48,6 +49,7 @@ class ConversionTests {
         DriveObject fooObject = conversionHandler.transform(foo);
         assertEquals(foo, conversionHandler.transform(fooObject, Foo.class));
         assertEquals(foo, conversionHandler.transformAutomatically(fooObject));
+        assertEquals(foo, conversionHandler.transform(fooObject, Choo.class));
 
     }
 }
