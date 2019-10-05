@@ -5,6 +5,8 @@ import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.interfaces.DriveWriter;
 import net.endrealm.realmdrive.query.Query;
 import net.endrealm.realmdrive.utils.ThreadUtils;
+import net.endrealm.realmdrive.utils.properties.ClassProperties;
+import net.endrealm.realmdrive.utils.properties.PropertyReader;
 
 import java.util.function.Consumer;
 
@@ -33,12 +35,16 @@ public class SimpleDriveWriter implements DriveWriter {
 
     @Override
     public void write(Object object) {
-        write(object, new Query());
+        Query query = new Query().build();
+        applyQueryChanges(object, query);
+        write(object, query);
     }
 
     @Override
     public void writeAsync(Object object, Runnable onFinish) {
-        writeAsync(object, new Query().build(), onFinish);
+        Query query = new Query().build();
+        applyQueryChanges(object, query);
+        writeAsync(object, query, onFinish);
 
     }
 
@@ -59,6 +65,8 @@ public class SimpleDriveWriter implements DriveWriter {
 
     @Override
     public void write(Object object, Query query) {
+        applyQueryChanges(object, query);
+
         write(driveService.getConversionHandler().transform(object), query);
     }
 
@@ -66,6 +74,8 @@ public class SimpleDriveWriter implements DriveWriter {
     public void writeAsync(Object object, Query query, Runnable onFinish) {
         ThreadUtils.createNewThread(
                 () -> {
+                    applyQueryChanges(object, query);
+
                     write(object, query);
                     onFinish.run();
                 }
@@ -111,6 +121,7 @@ public class SimpleDriveWriter implements DriveWriter {
      */
     @Override
     public void write(Object object, boolean overwrite, Query queryDetails) {
+        applyQueryChanges(object, queryDetails);
         write(driveService.getConversionHandler().transform(object), overwrite, queryDetails);
     }
 
@@ -126,6 +137,7 @@ public class SimpleDriveWriter implements DriveWriter {
     public void writeAsync(Object object, boolean overwrite, Query queryDetails, Runnable onFinish) {
         ThreadUtils.createNewThread(
                 () -> {
+                    applyQueryChanges(object, queryDetails);
                     write(object, overwrite, queryDetails);
                     onFinish.run();
                 }
@@ -147,6 +159,7 @@ public class SimpleDriveWriter implements DriveWriter {
 
     @Override
     public void replace(Object object, Query queryDetails) {
+        applyQueryChanges(object, queryDetails);
         replace(driveService.getConversionHandler().transform(object), queryDetails);
     }
 
@@ -196,5 +209,11 @@ public class SimpleDriveWriter implements DriveWriter {
     @Override
     public void setService(DriveService service) {
         this.driveService = service;
+    }
+
+    private void applyQueryChanges(Object object, Query query) {
+        ClassProperties classProperties = PropertyReader.readProperties(object.getClass());
+        if(classProperties.getTableName() != null)
+            query.setTableName(classProperties.getTableName());
     }
 }
