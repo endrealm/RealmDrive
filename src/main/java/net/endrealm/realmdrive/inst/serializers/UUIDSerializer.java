@@ -20,7 +20,7 @@ public class UUIDSerializer implements CustomSerializer<UUID> {
     }
 
     @Override
-    public UUID fromEndpoint(DriveElement endpoint) {
+    public UUID fromEndpoint(DriveElement endpoint, Class<UUID> uuidClass) {
         try {
             return UUID.fromString(endpoint.getAsString());
         } catch (NotAPrimitiveTypeException e) {

@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.factory;
 
 import net.endrealm.realmdrive.inst.*;
 import net.endrealm.realmdrive.inst.serializers.DateSerializer;
+import net.endrealm.realmdrive.inst.serializers.EnumSerializer;
 import net.endrealm.realmdrive.inst.serializers.UUIDSerializer;
 import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.utils.DriveSettings;
@@ -31,7 +32,8 @@ public class DriveServiceFactory {
         // Default serializers
         conversion.registerSerializers(
                 new UUIDSerializer(),
-                new DateSerializer()
+                new DateSerializer(),
+                new EnumSerializer()
         );
 
         DriveService driveService = new SimpleDriveService(backend, reader, writer, conversion);

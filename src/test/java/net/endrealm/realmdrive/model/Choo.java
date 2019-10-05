@@ -5,17 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.endrealm.realmdrive.annotations.SaveVar;
 
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Baz {
+public class Choo {
     @SaveVar
-    private String value0;
+    private char value0;
     @SaveVar
-    private UUID value1;
-    @SaveVar
-    private Chaz chaz;
+    private String value1;
 }
