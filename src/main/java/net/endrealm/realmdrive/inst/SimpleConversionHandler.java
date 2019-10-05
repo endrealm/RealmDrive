@@ -94,8 +94,23 @@ public class SimpleConversionHandler implements ConversionHandler {
                 return (T) object;
         }
 
-        if(!classes.contains(clazz))
-            throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
+        // Map class
+        {
+            DriveElement classElement = statisticsObject.get("className");
+
+            if(classElement != null) {
+                try {
+                    Class<?> storedClass = Class.forName(classElement.getAsString());
+                    if(clazz.isAssignableFrom(storedClass)) {
+                        //noinspection unchecked
+                        clazz = (Class<T>) storedClass;
+                    }
+                } catch (ClassNotFoundException ignored) {}
+            }
+
+            if(!classes.contains(clazz))
+                throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
+        }
 
         try {
             Constructor<T> constructor = clazz.getConstructor();
@@ -138,14 +153,10 @@ public class SimpleConversionHandler implements ConversionHandler {
                     field.set(instance, transform(value.getAsObject(), field.getType()));
                 else {
 
+                    // Handle primitives
                     Object primitiveValue = value.getPrimitiveValue();
-                    Object convertedEndpoint = getConvertedEndpoint(statisticsObject, clazz);
 
-                    if(convertedEndpoint != null) {
-                        //noinspection unchecked
-                        field.set(instance, convertedEndpoint);
-                    }
-                    else if((field.getType() == float.class || field.getType() == Float.class) && primitiveValue.getClass() == Double.class) {
+                    if((field.getType() == float.class || field.getType() == Float.class) && primitiveValue.getClass() == Double.class) {
                         field.set(instance, (float)((double) primitiveValue));
                     } else
                         field.set(instance, primitiveValue);
