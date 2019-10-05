@@ -2,6 +2,9 @@ package net.endrealm.realmdrive.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.endrealm.realmdrive.annotations.IgnoreVar;
+import net.endrealm.realmdrive.annotations.SaveAll;
+import net.endrealm.realmdrive.annotations.SaveTable;
 import net.endrealm.realmdrive.annotations.SaveVar;
 
 import java.util.ArrayList;
@@ -10,18 +13,18 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SaveAll
+@SaveTable(tableName = "fooTable")
 public class Foo extends Choo {
 
-    @SaveVar
     private int value2;
-    @SaveVar
     private long value3;
-    @SaveVar
     private float value4;
-    @SaveVar
     private double value5;
-    @SaveVar
     private List<Bar> bar;
+
+    @IgnoreVar
+    private final String aConstValue = "Great Right?";
 
     public Foo() {
     }

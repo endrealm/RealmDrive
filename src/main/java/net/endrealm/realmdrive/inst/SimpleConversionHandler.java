@@ -7,6 +7,9 @@ import net.endrealm.realmdrive.exceptions.ObjectReadOnlyException;
 import net.endrealm.realmdrive.factory.DriveObjectFactory;
 import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.utils.ReflectionUtils;
+import net.endrealm.realmdrive.utils.properties.ClassProperties;
+import net.endrealm.realmdrive.utils.properties.FieldProperties;
+import net.endrealm.realmdrive.utils.properties.PropertyReader;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -112,23 +115,48 @@ public class SimpleConversionHandler implements ConversionHandler {
                 throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
         }
 
+        ClassProperties classProperties = PropertyReader.readProperties(clazz);
+
         try {
             Constructor<T> constructor = clazz.getConstructor();
             T instance = constructor.newInstance();
 
-            for(Field field : ReflectionUtils.getAllAnnotatedFields(clazz, SaveVar.class)) {
+            for(Field field : ReflectionUtils.getAllFields(clazz)) {
+                FieldProperties fieldProperties = PropertyReader.readProperties(field, classProperties);
+
+                if(!fieldProperties.isRead())
+                    continue;
+
                 boolean protection = field.isAccessible();
                 field.setAccessible(true);
 
-                DriveElement value = statisticsObject.get(field.getName());
+                DriveElement value = statisticsObject.get(fieldProperties.getName());
 
-                if(value == null)
+                // Read from aliases
+                {
+                    int i = 0;
+                    while(value == null) {
+                        if(i >= fieldProperties.getAliases().size())
+                            break;
+
+                        value = statisticsObject.get(fieldProperties.getAliases().get(i));
+                        i++;
+                    }
+                }
+
+                // Value not found in object
+                if(value == null) {
+
+                    // if this field is only optional skip it
+                    if(fieldProperties.isOptional())
+                        continue;
+
                     throw new ClassCastException(String.format("Found unmapped field %s in %s!", field.getName(), field.getDeclaringClass().getName()));
+                }
 
                 {
                     Object object = getConvertedEndpoint(value, field.getType());
                     if(object != null) {
-                        //noinspection unchecked
                         field.set(instance, object);
                         continue;
                     }
@@ -235,10 +263,9 @@ public class SimpleConversionHandler implements ConversionHandler {
         if(!classes.contains(clazz))
             throw new ClassCastException(String.format("Failed to cast! %s is not registered!", clazz.getName()));
 
-        List<Field> fieldList = ReflectionUtils.getAllAnnotatedFields(clazz, SaveVar.class);
+        List<Field> fieldList = ReflectionUtils.getAllFields(clazz);
 
-        if(fieldList.isEmpty())
-            throw new ClassCastException(String.format("Class %s must contain at least one field annotated with SaveVar", clazz.getName()));
+        ClassProperties classProperties = PropertyReader.readProperties(clazz);
 
         DriveObject statisticsObject = objectFactory.createEmptyObject();
 
@@ -247,17 +274,31 @@ public class SimpleConversionHandler implements ConversionHandler {
             statisticsObject.setPrimitive("className", object.getClass().getName());
 
             for(Field field : fieldList) {
+                FieldProperties fieldProperties = PropertyReader.readProperties(field, classProperties);
+
+                if(!fieldProperties.isWrite())
+                    continue;
+
                 boolean protection = field.isAccessible();
                 field.setAccessible(true);
 
                 Object value = field.get(object);
 
+                if(value == null) {
+
+                    // if this field is only optional skip it
+                    if(fieldProperties.isOptional())
+                        continue;
+
+                    throw new ClassCastException(String.format("Found empty non optional field %s in %s!", field.getName(), field.getDeclaringClass().getName()));
+                }
+
                 DriveElement driveElement = getElementEndpoint(value, value.getClass());
                 if(driveElement != null) {
-                    statisticsObject.setObject(field.getName(), driveElement);
+                    statisticsObject.setObject(fieldProperties.getName(), driveElement);
                 }
                 else if(PRIMITIVE_CLASSES.contains(value.getClass()))
-                    statisticsObject.setObject(field.getName(), objectFactory.createPrimitive(value));
+                    statisticsObject.setObject(fieldProperties.getName(), objectFactory.createPrimitive(value));
                 else if(List.class.isAssignableFrom(field.getType())) {
                     DriveElementArray array = objectFactory.createEmptyArray();
                     for(Object obj : (List)value) {
@@ -266,10 +307,10 @@ public class SimpleConversionHandler implements ConversionHandler {
                         else
                             array.addObject(transform(obj));
                     }
-                    statisticsObject.setObject(field.getName(), array);
+                    statisticsObject.setObject(fieldProperties.getName(), array);
                 }
                 else {
-                    statisticsObject.setObject(field.getName(), transform(value));
+                    statisticsObject.setObject(fieldProperties.getName(), transform(value));
                 }
 
                 field.setAccessible(protection);
