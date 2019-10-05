@@ -57,9 +57,9 @@ properties:
 > Fields marked with this will be ignored when saving and loading
 
 `@WriteOnly()` | scope = Field
-> Fields marked with this will only be saved, but not loaded. Requires @SaveVar to do something
+> Fields marked with this will only be saved, but not loaded.
 
 `@ReadOnly()` | scope = Field
-> Fields marked with this will only be loaded, but not saved. Requires @SaveVar to do something
+> Fields marked with this will only be loaded, but not saved.
 
 > **Note:** Having both ReadOnly and WriteOnly on a field will lead to unexpected behaviour and should be replaced by SaveVar
