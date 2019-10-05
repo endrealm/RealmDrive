@@ -131,7 +131,6 @@ public class SimpleConversionHandler implements ConversionHandler {
                 field.setAccessible(true);
 
                 DriveElement value = statisticsObject.get(fieldProperties.getName());
-                //TODO read from aliases
 
                 // Read from aliases
                 {
