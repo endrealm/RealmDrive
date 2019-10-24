@@ -1,6 +1,7 @@
 package net.endrealm.realmdrive.interfaces;
 
 import net.endrealm.realmdrive.query.Query;
+import net.endrealm.realmdrive.utils.paging.Pageable;
 
 import java.util.List;
 
@@ -45,6 +46,14 @@ public interface DriveBackend {
      * @return empty list if not found
      */
     List<DriveObject> findAll(Query queryDetails);
+    /**
+     * Read all objects matching the query parameters
+     *
+     * @param queryDetails the query to use
+     * @param pageable the pageable used for pagination
+     * @return empty list if not found
+     */
+    List<DriveObject> findAll(Query queryDetails, Pageable pageable);
 
     /**
      * Sets the service the backend is used by.
