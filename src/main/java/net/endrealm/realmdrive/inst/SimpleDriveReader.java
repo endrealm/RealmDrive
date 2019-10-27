@@ -5,6 +5,7 @@ import net.endrealm.realmdrive.interfaces.DriveReader;
 import net.endrealm.realmdrive.interfaces.DriveService;
 import net.endrealm.realmdrive.query.Query;
 import net.endrealm.realmdrive.utils.ThreadUtils;
+import net.endrealm.realmdrive.utils.paging.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,6 +180,45 @@ public class SimpleDriveReader implements DriveReader {
                 () -> {
                     try {
                         List<T> result = readAllObjects(query, clazz);
+                        onSuccess.accept(result);
+
+                    } catch (Exception ex) {
+                        onError.accept(ex);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public List<DriveObject> readPagedObjects(Query query, Pageable pageable) {
+        return driveService.getBackend().findAll(query, pageable);
+    }
+
+    @Override
+    public void readPagedObjectsAsync(Query query, Pageable pageable, Consumer<List<DriveObject>> onResult) {
+        ThreadUtils.createNewThread(
+                () -> {
+                    List<DriveObject> result = readPagedObjects(query, pageable);
+                    onResult.accept(result);
+                }
+        );
+    }
+
+    @Override
+    public <T> List<T> readPagedObjects(Query query, Pageable pageable, Class<T> clazz) throws ClassCastException {
+        List<T> list = new ArrayList<>();
+        for (DriveObject obj: readPagedObjects(query, pageable)) {
+            list.add(driveService.getConversionHandler().transform(obj, clazz));
+        }
+        return list;
+    }
+
+    @Override
+    public <T> void readPagedObjectsAsync(Query query, Pageable pageable, Class<T> clazz, Consumer<List<T>> onSuccess, Consumer<Throwable> onError) {
+        ThreadUtils.createNewThread(
+                () -> {
+                    try {
+                        List<T> result = readPagedObjects(query, pageable, clazz);
                         onSuccess.accept(result);
 
                     } catch (Exception ex) {

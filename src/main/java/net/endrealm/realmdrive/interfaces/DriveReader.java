@@ -1,6 +1,7 @@
 package net.endrealm.realmdrive.interfaces;
 
 import net.endrealm.realmdrive.query.Query;
+import net.endrealm.realmdrive.utils.paging.Pageable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -93,7 +94,6 @@ public interface DriveReader {
      */
     <T> List<T> readAllObjects(Query query, Class<T> clazz) throws ClassCastException;
 
-
     /**
      * Read all object instances found by the specified parameters
      * @param query query details used to search for the objects
@@ -103,6 +103,47 @@ public interface DriveReader {
      * @param onError called when an error occurs
      */
     <T> void readAllObjects(Query query, Class<T> clazz, Consumer<List<T>> onSuccess, Consumer<Throwable> onError);
+
+    /**
+     * Read all object instances found by the specified parameters
+     *
+     * @param query query details used to search for the objects
+     * @param pageable used for pagination
+     * @return objects that were found
+     */
+    List<DriveObject> readPagedObjects(Query query, Pageable pageable);
+
+    /**
+     * Read all object instances found by the specified parameters
+     *
+     * @param query query details used to search for the objects
+     * @param pageable used for pagination
+     * @param onResult invoked upon result
+     */
+    void readPagedObjectsAsync(Query query, Pageable pageable, Consumer<List<DriveObject>> onResult);
+
+
+    /**
+     * Read all object instances found by the specified parameters
+     * @param query query details used to search for the objects
+     * @param pageable used for pagination
+     * @param clazz clazz to convert the results into
+     * @param <T> will try to convert the objects into the type
+     * @return objects that were found
+     * @throws ClassCastException thrown if found objects can not be converted into T
+     */
+    <T> List<T> readPagedObjects(Query query, Pageable pageable, Class<T> clazz) throws ClassCastException;
+
+    /**
+     * Read all object instances found by the specified parameters
+     * @param query query details used to search for the objects
+     * @param pageable used for pagination
+     * @param clazz clazz to convert the results into
+     * @param <T> will try to convert the objects into the type
+     * @param onSuccess invoked upon result
+     * @param onError called when an error occurs
+     */
+    <T> void readPagedObjectsAsync(Query query, Pageable pageable, Class<T> clazz, Consumer<List<T>> onSuccess, Consumer<Throwable> onError);
 
     /**
      * Sets the service the reader is used by.
