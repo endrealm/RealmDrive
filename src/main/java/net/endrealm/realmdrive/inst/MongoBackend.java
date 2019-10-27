@@ -8,6 +8,9 @@ import net.endrealm.realmdrive.factory.DriveObjectFactory;
 import net.endrealm.realmdrive.interfaces.*;
 import net.endrealm.realmdrive.query.Query;
 import net.endrealm.realmdrive.utils.BsonUtils;
+import net.endrealm.realmdrive.utils.paging.Pageable;
+import net.endrealm.realmdrive.utils.paging.Sorter;
+import net.endrealm.realmdrive.utils.paging.SortingOrder;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.BasicBSONList;
@@ -148,6 +151,30 @@ public class MongoBackend implements DriveBackend {
         }
 
         return result;
+    }
+
+    @Override
+    public List<DriveObject> findAll(Query queryDetails, Pageable pageable) {
+        Document query = readQuery(queryDetails);
+        FindIterable iterable = readCollectionFromQuery(queryDetails).find(query).sort(read(pageable.getSorters())).skip(pageable.getPage()*pageable.getPerPage()).limit(pageable.getPerPage());
+
+        ArrayList<DriveObject> result = new ArrayList<>();
+        for(Object item : iterable) {
+            Document document = (Document) item;
+            result.add(BsonUtils.unStringify(document, new DriveObjectFactory(driveService)));
+        }
+
+        return result;
+    }
+
+    private Bson read(List<Sorter> sorters) {
+        Document document = new Document();
+
+        for (Sorter sorter : sorters) {
+            document.append(sorter.getKey(), sorter.getOrder() == SortingOrder.ASCENDING ? 1 : -1);
+        }
+
+        return document;
     }
 
     /**
