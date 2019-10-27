@@ -28,7 +28,7 @@ public final class Pageable {
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class PageableBuilder {
+    public static class PageableBuilder {
         private int page, perPage;
         private final List<Sorter> sorters;
 
