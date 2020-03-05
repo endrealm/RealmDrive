@@ -86,6 +86,19 @@ public class SimpleConversionHandler implements ConversionHandler {
      */
     @Override
     public <T> T transform(DriveObject statisticsObject, Class<T> clazz) throws ClassCastException {
+        return transform(statisticsObject, clazz, null);
+    }
+
+    /**
+     * Transforms a stats object into a classes object. Target class must be registered.
+     *
+     * @param statisticsObject the object to convert
+     * @param clazz target clazz to convert to
+     * @param <T> type of target
+     * @return returns instance of target type
+     * @throws ClassCastException if object can not be transformed.
+     */
+    public <T> T transform(DriveObject statisticsObject, Class<T> clazz, Object parent) throws ClassCastException {
 
         if(statisticsObject == null || statisticsObject.isEmpty())
             return null;
@@ -173,12 +186,12 @@ public class SimpleConversionHandler implements ConversionHandler {
 
                     ParameterizedType listType = (ParameterizedType) field.getGenericType();
                     Class<?> listGenericClass = (Class<?>) listType.getActualTypeArguments()[0];
-                    List list = createList(array, listGenericClass);
+                    List list = createList(array, listGenericClass, instance);
                     field.set(instance, list);
 
                 }
                 else if(value.getPrimitiveValue() == null)
-                    field.set(instance, transform(value.getAsObject(), field.getType()));
+                    field.set(instance, transform(value.getAsObject(), field.getType(), instance));
                 else {
 
                     // Handle primitives
@@ -220,16 +233,8 @@ public class SimpleConversionHandler implements ConversionHandler {
         return null;
     }
 
-    /**
-     * Creates a new list with the given class
-     *
-     * @param array array to transform
-     * @param clazz target clazz
-     * @return the list
-     * @throws ClassCastException thrown when two lists are in one another
-     */
     @Override
-    public List createList(DriveElementArray array, Class clazz) throws ClassCastException {
+    public List createList(DriveElementArray array, Class clazz, Object parent) throws ClassCastException {
         List list = new ArrayList<>();
         if(PRIMITIVE_CLASSES.contains(clazz)) {
             for(DriveElement driveElement : array.getContents())
@@ -238,7 +243,7 @@ public class SimpleConversionHandler implements ConversionHandler {
             throw new ClassCastException("List stacking is not supported");
         } else {
             for(DriveElement driveElement : array.getContents())
-                list.add(transform(driveElement.getAsObject(), clazz));
+                list.add(transform(driveElement.getAsObject(), clazz, parent));
         }
 
         return list;
