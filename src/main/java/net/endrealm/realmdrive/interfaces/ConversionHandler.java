@@ -41,10 +41,11 @@ public interface ConversionHandler {
      *
      * @param array array to transform
      * @param clazz target clazz
+     * @param parent optional parent instance
      * @return the list
      * @throws ClassCastException thrown when two lists are in one another
      */
-    List createList(DriveElementArray array, Class clazz);
+    List createList(DriveElementArray array, Class clazz, Object parent);
 
     /**
      * Transforms a basic object into a DriveObject. This does not work for primitives. Class must be registered.
