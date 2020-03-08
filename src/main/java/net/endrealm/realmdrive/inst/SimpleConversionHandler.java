@@ -1,6 +1,7 @@
 package net.endrealm.realmdrive.inst;
 
 import lombok.Data;
+import net.endrealm.realmdrive.annotations.InjectParent;
 import net.endrealm.realmdrive.annotations.SaveVar;
 import net.endrealm.realmdrive.exceptions.NotAPrimitiveTypeException;
 import net.endrealm.realmdrive.exceptions.ObjectReadOnlyException;
@@ -131,8 +132,26 @@ public class SimpleConversionHandler implements ConversionHandler {
         ClassProperties classProperties = PropertyReader.readProperties(clazz);
 
         try {
-            Constructor<T> constructor = clazz.getConstructor();
-            T instance = constructor.newInstance();
+
+            Constructor<T> constructor = null;
+
+            // If wants to inject parent find matching constructor
+            if(clazz.getAnnotation(InjectParent.class) != null && parent != null) {
+                Class<?> parentType = parent.getClass();
+
+                while (constructor == null && parentType != null) {
+                    try {
+                        constructor = clazz.getConstructor(parentType);
+                    } catch (NoSuchMethodException | SecurityException ignore) {}
+                    finally {
+                        parentType = parentType.getSuperclass();
+                    }
+                }
+             }
+
+            if(constructor == null)
+                constructor = clazz.getConstructor();
+            T instance = constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(parent);
 
             for(Field field : ReflectionUtils.getAllFields(clazz)) {
                 FieldProperties fieldProperties = PropertyReader.readProperties(field, classProperties);
