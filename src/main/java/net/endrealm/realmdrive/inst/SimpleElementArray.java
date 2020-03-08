@@ -93,7 +93,7 @@ public class SimpleElementArray implements DriveElementArray {
     @Override
     @SuppressWarnings("unchecked")
     public <T> List<T> getAsTypedList(Class<T> clazz) throws ClassCastException {
-        return factory.getDriveService().getConversionHandler().createList(this, clazz);
+        return factory.getDriveService().getConversionHandler().createList(this, clazz, null);
     }
 
     /**
