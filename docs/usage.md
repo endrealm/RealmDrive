@@ -48,6 +48,11 @@ Now there is little left to get a simple DriveService implementation
 ```java
 DriveService service = new DriveServiceFactory().getDriveService(settings);
 ```
+#### Parent object injection
+Realm Drive can automatically find a constructor matching the type/super type of the parent object and will inject this to a constructor.
+**To enable** this behaviour put `@InjectParent` above the class. If no suitable constructor is found it will fallback to the no args constructor.
+
+Examples can be found [here](./inject-parent.md)
 
 #### Marking fields
 Read more about it [here](./annotations.md)
