@@ -8,6 +8,7 @@ import net.endrealm.realmdrive.interfaces.DriveElementArray;
 import net.endrealm.realmdrive.interfaces.DriveObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author johannesjumpertz
@@ -105,6 +106,35 @@ public class SimpleDriveObject implements DriveObject {
     @Override
     public boolean isEmpty() {
         return elementHashMap.isEmpty();
+    }
+
+    @Override
+    public DriveObject deepClone() {
+        DriveObject driveObject = factory.createEmptyObject();
+
+        for (Map.Entry<String, DriveElement> entry : driveObject.getSubComponents().entrySet()) {
+            driveObject.setObject(entry.getKey(), entry.getValue().deepClone());
+        }
+
+        return driveObject;
+    }
+
+    @Override
+    public DriveObject subtract(DriveElement driveElement) {
+        if(!(driveElement instanceof DriveObject))
+            return deepClone();
+        DriveObject secondObject = (DriveObject) driveElement;
+
+        DriveObject driveObject = factory.createEmptyObject();
+
+        for (Map.Entry<String, DriveElement> entry : driveObject.getSubComponents().entrySet()) {
+            DriveElement diff = entry.getValue().subtract(secondObject.get(entry.getKey()));
+
+            if(diff != null)
+                driveObject.setObject(entry.getKey(), diff);
+        }
+
+        return driveObject.isEmpty() ? null : driveObject;
     }
 
     /**

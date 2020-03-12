@@ -72,4 +72,10 @@ public interface DriveElementArray extends DriveElement {
      * @throws NotAPrimitiveTypeException thrown if object parameter is not a primitive type
      */
     void addPrimitive(Object object) throws NotAPrimitiveTypeException;
+
+    @Override
+    DriveElementArray deepClone();
+
+    @Override
+    DriveElementArray subtract(DriveElement driveElement);
 }

@@ -93,4 +93,21 @@ public interface DriveElement {
      * @return returns a list of sub objects. Null if storing a primitive.
      */
     HashMap<String, DriveElement> getSubComponents();
+
+    /**
+     * Subtracts a Drive element from this element leaving only the difference
+     * of this object compared to the parameter element.
+     *
+     * If there is no difference null is returned.
+     *
+     * @param driveElement the element to subtract
+     * @return difference of this object to the other. If no difference null is returned
+     */
+    DriveElement subtract(DriveElement driveElement);
+
+    /**
+     * Deep clones this element and returns the clone
+     * @return the deep clone
+     */
+    DriveElement deepClone();
 }

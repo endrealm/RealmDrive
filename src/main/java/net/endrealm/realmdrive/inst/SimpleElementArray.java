@@ -249,4 +249,33 @@ public class SimpleElementArray implements DriveElementArray {
     public HashMap<String, DriveElement> getSubComponents() {
         return null;
     }
+
+    @Override
+    public DriveElementArray subtract(DriveElement driveElement) {
+        if(!(driveElement instanceof DriveElementArray))
+            return deepClone();
+        DriveElementArray secondList = (DriveElementArray) driveElement;
+        DriveElementArray diff = new SimpleElementArray(factory);
+        for (int i = 0; i < list.size(); i++) {
+            if(secondList.get(i) == null) {
+                diff.addObject(get(i));
+                continue;
+            }
+
+            DriveElement diffElem = get(i).subtract(secondList.get(i));
+            if(diffElem == null)
+                continue;
+            diff.addObject(driveElement);
+        }
+        return diff.get(0) == null ? null : diff;
+    }
+
+    @Override
+    public DriveElementArray deepClone() {
+        DriveElementArray driveElementArray = new SimpleElementArray(factory);
+        for (DriveElement element: list) {
+            driveElementArray.addObject(element.deepClone());
+        }
+        return driveElementArray;
+    }
 }

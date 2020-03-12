@@ -55,4 +55,10 @@ public interface DriveObject extends DriveElement {
      * @return true if object does not contain any values
      */
     boolean isEmpty();
+
+    @Override
+    DriveObject deepClone();
+
+    @Override
+    DriveObject subtract(DriveElement driveElement);
 }

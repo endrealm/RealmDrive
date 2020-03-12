@@ -148,4 +148,21 @@ public class SimplePrimitiveDriveElement implements DriveElement {
     public HashMap<String, DriveElement> getSubComponents() {
         return null;
     }
+
+    @Override
+    public DriveElement subtract(DriveElement driveElement) {
+
+        if(!(driveElement instanceof SimplePrimitiveDriveElement))
+            return deepClone();
+
+        if(((SimplePrimitiveDriveElement) driveElement).value != value)
+            return deepClone();
+
+        return null;
+    }
+
+    @Override
+    public DriveElement deepClone() {
+        return new SimplePrimitiveDriveElement(value);
+    }
 }
