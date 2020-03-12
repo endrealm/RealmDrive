@@ -55,13 +55,18 @@ public class BsonUtils {
                         if(obj instanceof Document) {
                             array.addObject(unStringify((Document) obj, objectFactory));
                             //handle primitives
-                        } else
+                        } else if(obj != null) {
                             array.addPrimitive(obj);
+                        } else {
+                            array.addObject(null);
+                        }
                     }
                     statisticsObject.setObject(entry.getKey(), array);
                     //handle primitives
-                } else {
+                } else if(element != null) {
                     statisticsObject.setPrimitive(entry.getKey(), element);
+                } else {
+                    statisticsObject.setObject(entry.getKey(), null);
                 }
             }
         } catch (ObjectReadOnlyException | NotAPrimitiveTypeException e) {

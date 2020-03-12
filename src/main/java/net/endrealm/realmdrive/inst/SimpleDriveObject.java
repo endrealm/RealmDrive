@@ -128,6 +128,14 @@ public class SimpleDriveObject implements DriveObject {
         DriveObject driveObject = factory.createEmptyObject();
 
         for (Map.Entry<String, DriveElement> entry : driveObject.getSubComponents().entrySet()) {
+
+            if(entry.getValue() == null) {
+                if(secondObject.get(entry.getKey()) != null) {
+                    driveObject.setObject(entry.getKey(), null);
+                }
+                continue;
+            }
+
             DriveElement diff = entry.getValue().subtract(secondObject.get(entry.getKey()));
 
             if(diff != null)

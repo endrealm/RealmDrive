@@ -262,7 +262,16 @@ public class SimpleElementArray implements DriveElementArray {
                 continue;
             }
 
-            DriveElement diffElem = get(i).subtract(secondList.get(i));
+            DriveElement element = get(i);
+
+            if(element == null) {
+                if(secondList.get(i) != null) {
+                    diff.addObject(null);
+                }
+                continue;
+            }
+
+            DriveElement diffElem = element.subtract(secondList.get(i));
             if(diffElem == null)
                 continue;
             diff.addObject(driveElement);
@@ -274,7 +283,7 @@ public class SimpleElementArray implements DriveElementArray {
     public DriveElementArray deepClone() {
         DriveElementArray driveElementArray = new SimpleElementArray(factory);
         for (DriveElement element: list) {
-            driveElementArray.addObject(element.deepClone());
+            driveElementArray.addObject(element == null ? null : element.deepClone());
         }
         return driveElementArray;
     }

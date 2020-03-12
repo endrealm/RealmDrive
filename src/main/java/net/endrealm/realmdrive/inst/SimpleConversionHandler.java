@@ -257,12 +257,12 @@ public class SimpleConversionHandler implements ConversionHandler {
         List list = new ArrayList<>();
         if(PRIMITIVE_CLASSES.contains(clazz)) {
             for(DriveElement driveElement : array.getContents())
-                list.add(driveElement.getPrimitiveValue());
+                list.add(driveElement == null ? null : driveElement.getPrimitiveValue());
         } else if(DriveElementArray.class.isAssignableFrom(clazz)) {
             throw new ClassCastException("List stacking is not supported");
         } else {
             for(DriveElement driveElement : array.getContents())
-                list.add(transform(driveElement.getAsObject(), clazz, parent));
+                list.add(driveElement == null ? null : transform(driveElement.getAsObject(), clazz, parent));
         }
 
         return list;
