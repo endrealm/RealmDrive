@@ -280,6 +280,22 @@ public class SimpleElementArray implements DriveElementArray {
     }
 
     @Override
+    public int getSize() {
+        return list.size();
+    }
+
+    @Override
+    public DriveElement add(DriveElement driveElement) {
+
+        if(!(driveElement instanceof DriveElementArray))
+            return driveElement;
+
+        DriveElementArray listElement = ((DriveElementArray) driveElement);
+
+        return listElement.getSize() == 0 ? this : driveElement;
+    }
+
+    @Override
     public DriveElementArray deepClone() {
         DriveElementArray driveElementArray = new SimpleElementArray(factory);
         for (DriveElement element: list) {

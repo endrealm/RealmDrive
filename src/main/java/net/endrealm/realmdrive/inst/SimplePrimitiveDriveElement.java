@@ -162,6 +162,11 @@ public class SimplePrimitiveDriveElement implements DriveElement {
     }
 
     @Override
+    public DriveElement add(DriveElement driveElement) {
+        return driveElement;
+    }
+
+    @Override
     public DriveElement deepClone() {
         return new SimplePrimitiveDriveElement(value);
     }

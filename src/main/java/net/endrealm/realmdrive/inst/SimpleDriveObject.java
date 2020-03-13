@@ -145,6 +145,27 @@ public class SimpleDriveObject implements DriveObject {
         return driveObject.isEmpty() ? null : driveObject;
     }
 
+    @Override
+    public DriveElement add(DriveElement driveElement) {
+
+        if(!(driveElement instanceof DriveObject))
+            return driveElement;
+
+        if(this.isEmpty())
+            return driveElement;
+
+        DriveObject mergedObject = deepClone();
+        DriveObject other = (DriveObject) driveElement;
+
+        for(Map.Entry<String, DriveElement> entry : other.getSubComponents().entrySet()) {
+            DriveElement current = get(entry.getKey());
+            DriveElement mergeResult = current == null ? entry.getValue() : current.add(entry.getValue());
+            mergedObject.setObject(entry.getKey(), mergeResult);
+        }
+
+        return mergedObject;
+    }
+
     /**
      * @return this element as a {@link Boolean}
      * @throws ClassCastException         thrown if the element is not that type

@@ -98,12 +98,29 @@ public interface DriveElement {
      * Subtracts a Drive element from this element leaving only the difference
      * of this object compared to the parameter element.
      *
+     * Using this on non empty lists might break them.
+     *
      * If there is no difference null is returned.
      *
      * @param driveElement the element to subtract
      * @return difference of this object to the other. If no difference null is returned
      */
     DriveElement subtract(DriveElement driveElement);
+
+    /**
+     * Adds drive elements together.
+     *
+     * <b>Following rules apply:</b>
+     * <ul>
+     *     <li>
+     *         Changes from the added object will overwrite the values
+     *     </li>
+     * </ul>
+     *
+     * @param driveElement the drive element to add
+     * @return the result
+     */
+    DriveElement add(DriveElement driveElement);
 
     /**
      * Deep clones this element and returns the clone

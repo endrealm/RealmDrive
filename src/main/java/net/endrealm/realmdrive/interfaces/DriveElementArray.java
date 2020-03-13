@@ -78,4 +78,6 @@ public interface DriveElementArray extends DriveElement {
 
     @Override
     DriveElementArray subtract(DriveElement driveElement);
+
+    int getSize();
 }
