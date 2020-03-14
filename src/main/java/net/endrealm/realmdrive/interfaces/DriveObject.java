@@ -2,6 +2,7 @@ package net.endrealm.realmdrive.interfaces;
 
 import net.endrealm.realmdrive.exceptions.NotAPrimitiveTypeException;
 import net.endrealm.realmdrive.exceptions.ObjectReadOnlyException;
+import net.endrealm.realmdrive.factory.DriveObjectFactory;
 
 /**
  * @author johannesjumpertz
@@ -61,4 +62,11 @@ public interface DriveObject extends DriveElement {
 
     @Override
     DriveObject subtract(DriveElement driveElement);
+
+    /**
+     * The factory this object uses to construct sub objects and clones
+     *
+     * @return the objects factory
+     */
+    DriveObjectFactory getFactory();
 }
