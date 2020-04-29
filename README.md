@@ -4,9 +4,12 @@ Adapter to allow using and switching different backends in Java without a proble
 
 **Features:**
  - Easy setup and usage
- - Easy query building that translates into all supported datbases.
+ - Easy query building that translates into all supported databases.
  - Automatic java object <-> database entity conversion
  - Support to define serializers for existing classes like java.util.Date
+ 
+ RealmDrive **supports abstract classes/interfaces** (sub classes must be registered).
+ [More about sub classes here](./docs/sub-class.md)
 
 Currently supported database systems:
  - MongoDB

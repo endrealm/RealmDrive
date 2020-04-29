@@ -54,6 +54,8 @@ Realm Drive can automatically find a constructor matching the type/super type of
 
 Examples can be found [here](./inject-parent.md)
 
+**Find out how powerful sub classes can be with RealmDrive [here](sub-class.md)
+
 #### Marking fields
 Read more about it [here](./annotations.md)
 #### Register classes
