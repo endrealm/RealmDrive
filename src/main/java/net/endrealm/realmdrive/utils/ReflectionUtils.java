@@ -1,7 +1,9 @@
 package net.endrealm.realmdrive.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author johannesjumpertz
@@ -17,7 +19,11 @@ public class ReflectionUtils {
      * @return the fields
      */
     private static List<Field> getAllFields(List<Field> fields, Class<?> type) {
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        fields.addAll(
+                Arrays.stream(type.getDeclaredFields())
+                        .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                        .collect(Collectors.toList())
+        );
 
         if (type.getSuperclass() != null) {
             getAllFields(fields, type.getSuperclass());
